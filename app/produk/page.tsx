@@ -28,7 +28,7 @@ export default async function ProdukPage() {
 
             {/* table */}
             <div className="mt-4 px-2">
-                <div className="mb-3"><Input placeholder="Cari produk"/></div>
+                <div className="mb-3"><Input placeholder="cari"/></div>
                 {/* <TableProduct/> */}
                 <DataTable columns={columns} data={data} />
             </div>
