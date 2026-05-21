@@ -28,7 +28,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       >
-      <body className="min-h-screen">
+      <body className="min-h-screen overflow-x-hidden">
         <div className="bg-white">{children}</div>
         <Tabbar/>
       </body>
