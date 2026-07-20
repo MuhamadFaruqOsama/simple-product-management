@@ -7,10 +7,6 @@ import { ChartIncreaseIcon, Search01Icon } from "@hugeicons/core-free-icons";
 export default function RiwayatPage() {
     return (
         <div className="min-h-screen">
-            <Header
-                page="Riwayat"
-            />
-
             {/* summary */}
             <div className="mt-3 grid grid-cols-2 gap-2 px-2">
                 {/* total restock */}

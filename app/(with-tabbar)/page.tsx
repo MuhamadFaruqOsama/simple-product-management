@@ -9,10 +9,6 @@ import { SalesChart } from "../components/Saleschart";
 export default function Dashboard() {
     return (
         <div className="min-h-screen">
-            <Header
-                page="Beranda"
-            />
-
             <div className="space-y-1 mt-7 px-2">
                 <Card title="Total Pendapatan" value="Rp500.000,00" />
                 <SalesPurchasesCard

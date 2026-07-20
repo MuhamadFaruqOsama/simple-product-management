@@ -1,3 +1,4 @@
+import Header from "../components/Header";
 import { Tabbar } from "../components/Tabbar";
 
 export default function RootWithTabbarLayout({children}: Readonly<{
@@ -5,7 +6,11 @@ export default function RootWithTabbarLayout({children}: Readonly<{
 }>) {
     return (
         <div>
-            {children}
+            <div className="min-h-screen">
+                <Header/>
+                
+                {children}
+            </div>
             <Tabbar/>
         </div>
     )
