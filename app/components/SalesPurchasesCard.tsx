@@ -12,20 +12,20 @@ export function SalesPurchasesCard({ pengeluaran, pendapatan }: SalesPurchasesCa
             <div className="grid grid-cols-2">
                 <div className="flex items-center gap-2">
                     <div className="text-red-500">
-                        <HugeiconsIcon icon={ArrowDown02Icon} />
+                        <HugeiconsIcon icon={ArrowDown02Icon} size={30} strokeWidth={2}/>
                     </div>
                     <div>
                         <div className="text-gray-100 text-sm">Pengeluaran</div>
-                        <div className="font-semibold text-white mt-1">Rp.{pengeluaran.toLocaleString('id-ID')}</div>
+                        <div className="text-white mt-1">Rp.{pengeluaran.toLocaleString('id-ID')}</div>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="text-green-500">
-                        <HugeiconsIcon icon={ArrowUp02Icon} />
+                        <HugeiconsIcon icon={ArrowUp02Icon} size={30} strokeWidth={2}/>
                     </div>
                     <div>
                         <div className="text-gray-100 text-sm">Pendapatan</div>
-                        <div className="font-semibold text-white mt-1">Rp.{pendapatan.toLocaleString('id-ID')}</div>
+                        <div className="text-white mt-1">Rp.{pendapatan.toLocaleString('id-ID')}</div>
                     </div>
                 </div>
             </div>

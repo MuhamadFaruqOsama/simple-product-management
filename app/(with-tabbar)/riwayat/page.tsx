@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
-import Header from "../components/Header";
-import { RiwayatCard } from "../components/RiwayatCard";
+import Header from "../../components/Header";
+import { RiwayatCard } from "../../components/RiwayatCard";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ChartIncreaseIcon, Search01Icon } from "@hugeicons/core-free-icons";
 
@@ -12,7 +12,7 @@ export default function RiwayatPage() {
             />
 
             {/* summary */}
-            <div className="my-5 grid grid-cols-2 gap-2 px-2">
+            <div className="mt-3 grid grid-cols-2 gap-2 px-2">
                 {/* total restock */}
                 <div className="p-2 bg-blue-500 rounded-md border relative overflow-hidden">
                     <div className="text-2xl font-semibold text-white mb-3">90</div>
@@ -33,13 +33,13 @@ export default function RiwayatPage() {
 
             <div className="px-2">
                 {/* search */}
-                <div className="relative">
+                <div className="relative my-3">
                     <Input placeholder="cari" className="bg-white"/>
                     <HugeiconsIcon icon={Search01Icon} className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-300"/>
                 </div>
 
                 {/* list */}
-                <div className="mt-3 space-y-2">
+                <div className="space-y-2 pb-30">
                     <RiwayatCard/>
                 </div>
             </div>

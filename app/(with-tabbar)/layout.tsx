@@ -1,9 +1,12 @@
+import { Tabbar } from "../components/Tabbar";
+
 export default function RootWithTabbarLayout({children}: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
-        <div className="flex-1 flex flex-col">
+        <div>
             {children}
+            <Tabbar/>
         </div>
     )
 }

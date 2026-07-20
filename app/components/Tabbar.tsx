@@ -33,7 +33,7 @@ export function Tabbar() {
     const pathname = usePathname()
 
     return (
-        <nav className="flex justify-around gap-2 px-2 items-center fixed w-full bottom-0 left-0 border-t border-gray-200 py-2 bg-white">
+        <nav className="flex justify-around gap-2 px-2 items-center fixed w-full bottom-0 left-0 border-t border-gray-200 py-4 bg-white">
             {
                 tabs.map((tab, index) => {
                     const isActive = pathname === tab.href
@@ -43,7 +43,7 @@ export function Tabbar() {
                             key={index}
                             href={tab.href}
                             className={clsx(
-                                "flex flex-col items-center transition-colors",
+                                "flex flex-col items-center transition-colors hover:text-blue-500",
                                 isActive
                                     ? "text-blue-500 font-bold"
                                     : "text-gray-400"

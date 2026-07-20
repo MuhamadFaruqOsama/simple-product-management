@@ -30,7 +30,6 @@ export default function RootLayout({
       >
       <body className="min-h-screen overflow-x-hidden">
         <div className="bg-gray-50">{children}</div>
-        <Tabbar/>
       </body>
     </html>
   );
