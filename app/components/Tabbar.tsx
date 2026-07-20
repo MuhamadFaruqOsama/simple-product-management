@@ -45,7 +45,7 @@ export function Tabbar() {
                             className={clsx(
                                 "flex flex-col items-center transition-colors",
                                 isActive
-                                    ? "text-blue-500"
+                                    ? "text-blue-500 font-bold"
                                     : "text-gray-400"
                             )}
                         >

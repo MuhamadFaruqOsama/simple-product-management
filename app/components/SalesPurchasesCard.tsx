@@ -11,21 +11,21 @@ export function SalesPurchasesCard({ pengeluaran, pendapatan }: SalesPurchasesCa
         <div className="p-3 border border-gray-200 rounded-lg bg-linear-to-l from-blue-700 to-sky-500 relative overflow-hidden">
             <div className="grid grid-cols-2">
                 <div className="flex items-center gap-2">
-                    <div className="text-green-500">
-                        <HugeiconsIcon icon={ArrowUp02Icon} />
-                    </div>
-                    <div>
-                        <div className="text-gray-100 text-xs">Pengeluaran</div>
-                        <div className="font-medium text-white text-sm mt-1">Rp.{pengeluaran.toLocaleString('id-ID')}</div>
-                    </div>
-                </div>
-                <div className="flex items-center gap-2">
                     <div className="text-red-500">
                         <HugeiconsIcon icon={ArrowDown02Icon} />
                     </div>
                     <div>
-                        <div className="text-gray-100 text-xs">Pendapatan</div>
-                        <div className="font-medium text-white text-sm mt-1">Rp.{pendapatan.toLocaleString('id-ID')}</div>
+                        <div className="text-gray-100 text-sm">Pengeluaran</div>
+                        <div className="font-semibold text-white mt-1">Rp.{pengeluaran.toLocaleString('id-ID')}</div>
+                    </div>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="text-green-500">
+                        <HugeiconsIcon icon={ArrowUp02Icon} />
+                    </div>
+                    <div>
+                        <div className="text-gray-100 text-sm">Pendapatan</div>
+                        <div className="font-semibold text-white mt-1">Rp.{pendapatan.toLocaleString('id-ID')}</div>
                     </div>
                 </div>
             </div>
