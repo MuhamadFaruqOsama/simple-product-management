@@ -1,8 +1,7 @@
 import { Input } from "@/components/ui/input";
-import Header from "../../components/Header";
 import { RiwayatCard } from "../../components/RiwayatCard";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ChartIncreaseIcon, Search01Icon } from "@hugeicons/core-free-icons";
+import { Search01Icon } from "@hugeicons/core-free-icons";
 
 export default function RiwayatPage() {
     return (

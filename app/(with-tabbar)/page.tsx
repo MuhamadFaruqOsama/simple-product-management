@@ -1,6 +1,5 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import Card from "../components/Card";
-import Header from "../components/Header";
 import { SalesPurchasesCard } from "../components/SalesPurchasesCard";
 import { PackageSearchIcon } from "@hugeicons/core-free-icons";
 import { EarningChart } from "../components/EarningChart";
