@@ -1,3 +1,5 @@
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
 const dummyData = [
     {
         is_restock: true,
@@ -71,7 +73,7 @@ export function RiwayatCard() {
                             <div className={`flex justify-between items-center px-3 py-2 relative ${item.is_restock ? "bg-blue-500" : "bg-orange-500"}`}>
                                 <h3 className="font-bold text-white">#2312</h3>
                                 <button className="p-1 rounded-md hover:bg-white/10 text-white transition-all duration-300 text-sm">
-                                    {item.is_restock ? "Restock" : "Pengeluaran"}
+                                    {item.is_restock ? "Pengadaan" : "Penjualan"}
                                 </button>
                             </div>
                             <div className="pt-2 border-t px-3 py-2 space-y-3">
@@ -79,12 +81,29 @@ export function RiwayatCard() {
                                     <div className="text-start text-sm text-gray-600">Tanggal</div>
                                     <div className="text-start text-gray-800">{item.date}</div>
                                 </div>
-                                <div className="flex justify-between items-end">
-                                    <div className="text-start text-sm text-gray-600">Nama Produk</div>
-                                    <div className="text-start text-gray-800">{item.nama_produk}</div>
+                                <div className="">
+                                    <div className="text-start text-sm text-gray-600">Daftar Produk</div>
+                                    <Table className="border rounded-md">
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead className="text-start font-semibold">Nama</TableHead>
+                                                <TableHead className="text-start font-semibold">Jumlah</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            <TableRow>
+                                                <TableCell className="w-1/3 align-top whitespace-normal wrap-break-word">
+                                                    {item.nama_produk}
+                                                </TableCell>
+                                                <TableCell className="w-2/3 align-top whitespace-normal wrap-break-word">
+                                                    {item.amount}   
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
                                 </div>
                                 <div className="flex justify-between items-end">
-                                    <div className="text-start text-sm text-gray-600">Jumlah</div>
+                                    <div className="text-start text-sm text-gray-600">Jumlah {item.is_restock ? "Pengeluaran" : "Pemasukkan"}</div>
                                     <div className="text-start text-gray-800">{item.amount}</div>
                                 </div>
                             </div>
