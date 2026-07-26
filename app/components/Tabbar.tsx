@@ -5,7 +5,8 @@ import { TabbarLink } from "./TabbarLink"
 import {
     Clock02Icon,
     Home07Icon,
-    PackageProcessIcon
+    PackageReceiveIcon,
+    PackageSentIcon
 } from "@hugeicons/core-free-icons"
 
 import { usePathname } from "next/navigation"
@@ -18,9 +19,14 @@ const tabs = [
         icon: Home07Icon
     },
     {
-        name: 'Produk',
-        href: '/produk',
-        icon: PackageProcessIcon
+        name: 'Penjualan',
+        href: '/penjualan',
+        icon: PackageSentIcon
+    },
+    {
+        name: 'Pengadaan',
+        href: '/pengadaan',
+        icon: PackageReceiveIcon
     },
     {
         name: 'Riwayat',
@@ -50,7 +56,7 @@ export function Tabbar() {
                             )}
                         >
                             <HugeiconsIcon icon={tab.icon} />
-                            <div className="text-sm">
+                            <div className="text-sm line-clamp-1">
                                 {tab.name}
                             </div>
                         </TabbarLink>

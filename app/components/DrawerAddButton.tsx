@@ -15,16 +15,16 @@ export function DrawerAddButton() {
     return (
         <Dialog>
             <DialogTrigger>
-                <button className="w-14 h-14 rounded-full text-sm bg-blue-500 hover:bg-blue-600 duration-300 transition-all text-white font-medium flex items-center justify-center">
+                <div className="w-14 h-14 rounded-full text-sm bg-blue-500 hover:bg-blue-600 duration-300 transition-all text-white font-medium flex items-center justify-center">
                     <HugeiconsIcon icon={Add01Icon} size={40} strokeWidth={2}/>
-                </button>
+                </div>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                <DialogTitle>Tambah Produk</DialogTitle>
-                <DialogDescription>
-                    Masukkan detail produk yang ingin ditambahkan.
-                </DialogDescription>
+                    <DialogTitle>Tambah Produk</DialogTitle>
+                    <DialogDescription>
+                        Masukkan detail produk yang ingin ditambahkan.
+                    </DialogDescription>
                 </DialogHeader>
                 <div className="py-2 space-y-2">
                     <Input placeholder="nama produk"/>
