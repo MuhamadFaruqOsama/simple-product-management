@@ -11,7 +11,9 @@ export default function RootWithTabbarLayout({children}: Readonly<{
                     <HeaderWithBackButton/>
                 </div>
                 
-                {children}
+                <div className="px-2 pt-5 pb-20">
+                    {children}
+                </div>
             </div>
         </div>
     )
