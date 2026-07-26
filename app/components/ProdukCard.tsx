@@ -24,7 +24,7 @@ export function PengadaanCard() {
             </div>
 
             {/* detail */}
-            <Link href={`pengadaan/dfalkfjdkaldjflkafdbasfdl`}>
+            <Link href={`produk/dfalkfjdkaldjflkafdbasfdl`}>
                 <button className="w-full text-center flex items-center gap-1 justify-center p-2 rounded-md text-sm mt-3 border border-gray-300 hover:bg-blue-500 transition-all duration-300 hover:text-white cursor-pointer">
                     Detail 
                     <HugeiconsIcon icon={ArrowUpRight01Icon} size={16} strokeWidth={2}/>

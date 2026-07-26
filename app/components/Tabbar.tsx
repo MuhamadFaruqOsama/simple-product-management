@@ -19,13 +19,8 @@ const tabs = [
         icon: Home07Icon
     },
     {
-        name: 'Penjualan',
-        href: '/penjualan',
-        icon: PackageSentIcon
-    },
-    {
-        name: 'Pengadaan',
-        href: '/pengadaan',
+        name: 'Produk',
+        href: '/produk',
         icon: PackageReceiveIcon
     },
     {

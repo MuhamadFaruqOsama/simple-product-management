@@ -1,5 +1,5 @@
 import { DrawerAddButton } from "@/app/components/DrawerAddButton";
-import { PengadaanCard } from "@/app/components/PengadaanCard";
+import { PengadaanCard } from "@/app/components/ProdukCard";
 import { Input } from "@/components/ui/input";
 import { Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
