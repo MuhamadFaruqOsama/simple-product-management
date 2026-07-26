@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Delete02Icon, Edit02Icon, ShoppingBasketAdd03Icon } from "@hugeicons/core-free-icons";
+import { Delete02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
     Table,

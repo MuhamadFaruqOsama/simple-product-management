@@ -1,4 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { EditHistory } from "./EditHistory";
+import { DeleteHistory } from "./DeleteHistory";
 
 const dummyData = [
     {
@@ -70,11 +72,18 @@ export function RiwayatCard() {
                 dummyData.map((item, index) => (
                     <div className="bg-white border border-gray-200 rounded-md overflow-hidden mb-2" key={index}>
                         <div className="border-b last:border-b-0">
-                            <div className={`flex justify-between items-center px-3 py-2 relative ${item.is_restock ? "bg-blue-500" : "bg-orange-500"}`}>
+                            <div className={`flex justify-between overflow-hidden items-center px-3 py-2 relative ${item.is_restock ? "bg-blue-500" : "bg-orange-500"}`}>
                                 <h3 className="font-bold text-white">#2312</h3>
-                                <button className="p-1 rounded-md hover:bg-white/10 text-white transition-all duration-300 text-sm">
-                                    {item.is_restock ? "Pengadaan" : "Penjualan"}
-                                </button>
+                                <div className="flex justify-end gap-2 items-center">
+                                    <div className="p-1 rounded-md text-white text-sm">
+                                        {item.is_restock ? "Pengadaan" : "Penjualan"}
+                                    </div>
+
+                                    <EditHistory/>
+                                    <DeleteHistory/>
+                                </div>
+
+                                <div className="absolute bg-white/10 h-40 w-40 rounded-full -left-6 -bottom-28"></div>
                             </div>
                             <div className="pt-2 border-t px-3 py-2 space-y-3">
                                 <div className="flex justify-between items-end">

@@ -8,7 +8,7 @@ export function AddProduct() {
     return (
         <Dialog>
             <DialogTrigger>
-                <div className="px-5 cursor-pointer py-2 text-sm text-white bg-blue-500 rounded-sm mt-3">
+                <div className="px-5 cursor-pointer py-2 text-sm text-white bg-blue-500 rounded-sm">
                     tambah produk
                 </div>
             </DialogTrigger>

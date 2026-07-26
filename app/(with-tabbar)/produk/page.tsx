@@ -29,7 +29,8 @@ export default function PengadaanPage() {
     <div className="relative">
       <div className="px-2">
         {/* tambah produk */}
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-3">
+          {/* total jual */}
           <AddProduct/>
         </div>
 

@@ -6,7 +6,6 @@ import {
     Clock02Icon,
     Home07Icon,
     PackageReceiveIcon,
-    PackageSentIcon
 } from "@hugeicons/core-free-icons"
 
 import { usePathname } from "next/navigation"

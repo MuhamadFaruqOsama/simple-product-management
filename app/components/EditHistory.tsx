@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import { Add01Icon, MinusSignIcon } from "@hugeicons/core-free-icons";
+import { Add01Icon, Edit02Icon, MinusSignIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Dialog,
@@ -21,52 +21,53 @@ type LineItem = {
     quantity: string;
 };
 
-export function DrawerAddButton() {
+export function EditHistory() {
+
     const items = [
-    { label: "Light", value: "light" },
-    { label: "Dark", value: "dark" },
-    { label: "System", value: "system" },
-    ]
-
-    const [lineItems, setLineItems] = useState<LineItem[]>([
-        { id: "1", product: "", quantity: "1" },
-    ]);
-
-    const addLineItem = () => {
-        setLineItems((current) => [
-            ...current,
-            {
-                id: crypto.randomUUID(),
-                product: "",
-                quantity: "1",
-            },
+        { label: "Light", value: "light" },
+        { label: "Dark", value: "dark" },
+        { label: "System", value: "system" },
+        ]
+    
+        const [lineItems, setLineItems] = useState<LineItem[]>([
+            { id: "1", product: "", quantity: "1" },
         ]);
-    };
-
-    const removeLineItem = () => {
-        setLineItems((current) => (current.length > 1 ? current.slice(0, -1) : current));
-    };
-
-    const updateLineItem = (id: string, field: keyof Omit<LineItem, "id">, value: string) => {
-        setLineItems((current) =>
-            current.map((item) =>
-                item.id === id ? { ...item, [field]: value } : item
-            )
-        );
-    };
+    
+        const addLineItem = () => {
+            setLineItems((current) => [
+                ...current,
+                {
+                    id: crypto.randomUUID(),
+                    product: "",
+                    quantity: "1",
+                },
+            ]);
+        };
+    
+        const removeLineItem = () => {
+            setLineItems((current) => (current.length > 1 ? current.slice(0, -1) : current));
+        };
+    
+        const updateLineItem = (id: string, field: keyof Omit<LineItem, "id">, value: string) => {
+            setLineItems((current) =>
+                current.map((item) =>
+                    item.id === id ? { ...item, [field]: value } : item
+                )
+            );
+        };
     
     return (
         <Dialog>
             <DialogTrigger>
-                <div className="w-14 h-14 rounded-full text-sm bg-linear-to-tr from-orange-500 to-yellow-500 hover:bg-orange-600 duration-300 transition-all text-white font-medium flex items-center justify-center">
-                    <HugeiconsIcon icon={Add01Icon} size={40} strokeWidth={2}/>
+                <div className="text-white bg-white/10 p-2 rounded-md hover:bg-white/20">
+                    <HugeiconsIcon icon={Edit02Icon} size={16}/>
                 </div>
             </DialogTrigger>
             <DialogContent className="max-h-screen p-3">
                 <DialogHeader>
-                    <DialogTitle>Tambah Penjualan Produk</DialogTitle>
+                    <DialogTitle>Edit Riwayat Penjualan</DialogTitle>
                     <DialogDescription>
-                        Anda dapat menambah penjualan produk lebih dari 1 produk sekaligus menggunakan menu ini.
+                        Perubahan riwayat akan berdampak pada penjumlahan keuangan.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="py-2 space-y-2">
@@ -108,7 +109,7 @@ export function DrawerAddButton() {
                 </div>
                 <DialogFooter>
                     <button className="w-full h-full bg-orange-500 py-3 rounded-md text-white">
-                        Tambah Penjualan
+                        Simpan perubahan
                     </button>
                 </DialogFooter>
             </DialogContent>

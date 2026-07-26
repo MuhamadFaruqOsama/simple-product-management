@@ -1,5 +1,4 @@
 import { HeaderWithBackButton } from "../components/HeaderWithBackButton";
-import Header from "../components/Header";
 
 export default function RootWithTabbarLayout({children}: Readonly<{
     children: React.ReactNode;
