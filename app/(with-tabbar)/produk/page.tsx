@@ -1,3 +1,4 @@
+import { AddProduct } from "@/app/components/AddProduct";
 import { DrawerAddButton } from "@/app/components/DrawerAddButton";
 import { PengadaanCard } from "@/app/components/ProdukCard";
 import { Input } from "@/components/ui/input";
@@ -27,6 +28,11 @@ export default function PengadaanPage() {
   return (
     <div className="relative">
       <div className="px-2">
+        {/* tambah produk */}
+        <div className="flex justify-end">
+          <AddProduct/>
+        </div>
+
         {/* search */}
         <div className="relative my-3">
             <Input placeholder="cari" className="bg-white"/>

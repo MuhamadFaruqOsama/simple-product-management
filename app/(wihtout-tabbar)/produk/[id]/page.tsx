@@ -1,7 +1,8 @@
 'use client'
 
+import { useState } from "react";
 import Image from "next/image";
-import { Edit02Icon } from "@hugeicons/core-free-icons";
+import { Delete02Icon, Edit02Icon, ShoppingBasketAdd03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
     Table,
@@ -11,6 +12,11 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { RestockButton } from "@/app/components/RestockButton";
+import { EditProduct } from "@/app/components/EditProduct";
+
+const placeholderImage =
+    "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23e5e7eb'/%3E%3Cpath d='M120 250l48-52 38 38 28-30 46 44' fill='none' stroke='%239ca3af' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='160' cy='155' r='18' fill='%239ca3af'/%3E%3C/svg%3E";
 
 const detailProductData = [
     {
@@ -145,26 +151,39 @@ const riwayatPengadaanData = [
     },
 ]
 
+type ViewMode = "semua" | "penjualan" | "pengadaan";
+
 export default function PengadaanDetailPage() {
+    const [viewMode, setViewMode] = useState<ViewMode>("penjualan");
+
+    const isActive = (mode: ViewMode) => viewMode === mode;
+
     return (
         <div className="w-full max-w-full">
             {/* edit */}
-            <div className="flex justify-end mb-3">
-                <button onClick={() => {}} className="cursor-pointer w-10 h-10 rounded-full bg-white flex items-center justify-center border border-gray-100 shadow-sm p-2.5">
-                    <HugeiconsIcon icon={Edit02Icon} />
+            <div className="flex justify-end mb-3 gap-2">
+                {/* restock */}
+                <RestockButton/>
+                
+                {/* edit */}
+                <EditProduct/>
+
+                {/* hapus */}
+                <button onClick={() => {}} className="cursor-pointer w-10 h-10 text-red-700 rounded-full bg-red-100 flex items-center justify-center border border-gray-100 shadow-sm p-2.5">
+                    <HugeiconsIcon icon={Delete02Icon} />
                 </button>
             </div>
             
             {/* image */}
-            <div className="mb-5 w-full max-w-50 overflow-hidden rounded-lg">
-                <Image
-                    src={"https://placehold.co/400"}
-                    width={200}
-                    height={200}
-                    alt="placeholder"
-                    loading="lazy"
-                    className="h-auto w-full object-cover"
-                />
+            <div className="mb-5 w-full overflow-hidden rounded-lg">
+                <div style={{ position: 'relative', width: '100%', height: '300px' }}>
+                    <Image
+                        src={placeholderImage}
+                        alt="placeholder"
+                        fill
+                        style={{ objectFit: 'cover' }} // Agar gambar tidak terdistorsi/gepeng
+                    />
+                </div>
             </div>
 
             {/* details */}
@@ -206,16 +225,47 @@ export default function PengadaanDetailPage() {
             </div>
 
             {/* switch button */}
-            <div className="flex gap-2 mt-4">
-                <button className="cursor-pointer px-5 py-2 bg-orange-500 text-white rounded-md  transition-colors text-sm">
+            <div className="mt-4 flex gap-2">
+                <button
+                    type="button"
+                    onClick={() => setViewMode("penjualan")}
+                    aria-pressed={isActive("penjualan")}
+                    className={`cursor-pointer px-5 py-2 rounded-md text-sm transition-colors ${
+                        isActive("penjualan")
+                            ? "bg-orange-500 text-white"
+                            : "bg-gray-200 text-gray-700 hover:bg-orange-500 hover:text-white"
+                    }`}
+                >
                     Detail Penjualan
                 </button>
-                <button className="cursor-pointer px-5 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-orange-500 hover:text-white transition-colors text-sm">
+                <button
+                    type="button"
+                    onClick={() => setViewMode("pengadaan")}
+                    aria-pressed={isActive("pengadaan")}
+                    className={`cursor-pointer px-5 py-2 rounded-md text-sm transition-colors ${
+                        isActive("pengadaan")
+                            ? "bg-orange-500 text-white"
+                            : "bg-gray-200 text-gray-700 hover:bg-orange-500 hover:text-white"
+                    }`}
+                >
                     Detail Pengadaan
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setViewMode("semua")}
+                    aria-pressed={isActive("semua")}
+                    className={`cursor-pointer px-5 py-2 rounded-md text-sm transition-colors ${
+                        isActive("semua")
+                            ? "bg-orange-500 text-white"
+                            : "bg-gray-200 text-gray-700 hover:bg-orange-500 hover:text-white"
+                    }`}
+                >
+                    Semua
                 </button>
             </div>
 
             {/* penjualan */}
+            {(viewMode === "semua" || viewMode === "penjualan") && (
             <div>
                 {/* detail penjualan */}
                 <h3 className="text-xl font-semibold text-gray-900 mb-1 mt-5">Detail Penjualan</h3>
@@ -268,8 +318,10 @@ export default function PengadaanDetailPage() {
                     </Table>
                 </div>
             </div>
+            )}
 
             {/* pengadaan */}
+            {(viewMode === "semua" || viewMode === "pengadaan") && (
             <div>
                 {/* detail pengadaan */}
                 <h3 className="text-xl font-semibold text-gray-900 mb-1 mt-5">Detail Pengadaan</h3>
@@ -322,6 +374,7 @@ export default function PengadaanDetailPage() {
                     </Table>
                 </div>
             </div>
+            )}
         </div>
     )
 }
