@@ -21,9 +21,9 @@ export function EditProduct() {
                         Anda dapat mengubah data produk dengan mengisi formulir di bawah ini.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="py-2 space-y-2">
+                <div className="py-2 space-y-2 max-h-[70vh] overflow-y-auto">
                     <Field>
-                        <FieldLabel htmlFor="input-add-product-name">Nama Produk</FieldLabel>
+                        <FieldLabel className="text-gray-600" htmlFor="input-add-product-name">Nama Produk</FieldLabel>
                         <Input 
                             id="input-add-product-name"
                             placeholder="ex: APD"
@@ -32,7 +32,7 @@ export function EditProduct() {
                         />
                     </Field>
                     <Field>
-                        <FieldLabel htmlFor="input-add-product-unit">Satuan</FieldLabel>
+                        <FieldLabel className="text-gray-600" htmlFor="input-add-product-unit">Satuan</FieldLabel>
                         <Input 
                             id="input-add-product-unit"
                             placeholder="ex: pcs"
@@ -41,7 +41,7 @@ export function EditProduct() {
                         />
                     </Field>
                     <Field>
-                        <FieldLabel htmlFor="input-add-product-buying-price">Harga Beli</FieldLabel>
+                        <FieldLabel className="text-gray-600" htmlFor="input-add-product-buying-price">Harga Beli</FieldLabel>
                         <InputGroup className="h-10">
                             <InputGroupAddon>
                                 <InputGroupText>Rp</InputGroupText>
@@ -56,7 +56,7 @@ export function EditProduct() {
                         </InputGroup>
                     </Field>
                     <Field>
-                        <FieldLabel htmlFor="input-add-product-volume">Volume</FieldLabel>
+                        <FieldLabel className="text-gray-600" htmlFor="input-add-product-volume">Volume</FieldLabel>
                         <Input 
                             id="input-add-product-volume"
                             placeholder="ex: 1,5kg"
@@ -65,7 +65,7 @@ export function EditProduct() {
                         />
                     </Field>
                     <Field>
-                        <FieldLabel htmlFor="input-add-product-selling-price">Harga Jual</FieldLabel>
+                        <FieldLabel className="text-gray-600" htmlFor="input-add-product-selling-price">Harga Jual</FieldLabel>
                         <InputGroup className="h-10">
                             <InputGroupAddon>
                                 <InputGroupText>Rp</InputGroupText>
@@ -80,7 +80,7 @@ export function EditProduct() {
                         </InputGroup>
                     </Field>
                     <Field>
-                        <FieldLabel htmlFor="input-add-product-selling-price">Deskripsi</FieldLabel>
+                        <FieldLabel className="text-gray-600" htmlFor="input-add-product-selling-price">Deskripsi</FieldLabel>
                         <Textarea></Textarea>
                     </Field>
                 </div>

@@ -70,7 +70,7 @@ export function EditHistory() {
                         Perubahan riwayat akan berdampak pada penjumlahan keuangan.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="py-2 space-y-2">
+                <div className="py-2 space-y-2 max-h-[70vh] overflow-y-auto">
                     {lineItems.map((lineItem, index) => (
                         <div key={index} className="border p-1.5 border-gray-200 rounded">
                             <div className="grid grid-cols-3 gap-2">

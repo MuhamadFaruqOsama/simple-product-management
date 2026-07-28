@@ -58,7 +58,7 @@ export function DrawerAddButton() {
     return (
         <Dialog>
             <DialogTrigger>
-                <div className="w-14 h-14 rounded-full text-sm bg-linear-to-tr from-orange-500 to-yellow-500 hover:bg-orange-600 duration-300 transition-all text-white font-medium flex items-center justify-center">
+                <div className="cursor-pointer w-14 h-14 rounded-full text-sm bg-linear-to-tr from-orange-500 to-yellow-500 hover:bg-orange-600 duration-300 transition-all text-white font-medium flex items-center justify-center">
                     <HugeiconsIcon icon={Add01Icon} size={40} strokeWidth={2}/>
                 </div>
             </DialogTrigger>
@@ -69,7 +69,7 @@ export function DrawerAddButton() {
                         Anda dapat menambah penjualan produk lebih dari 1 produk sekaligus menggunakan menu ini.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="py-2 space-y-2">
+                <div className="py-2 space-y-2 max-h-[70vh] overflow-y-auto">
                     {lineItems.map((lineItem, index) => (
                         <div key={index} className="border p-1.5 border-gray-200 rounded">
                             <div className="grid grid-cols-3 gap-2">

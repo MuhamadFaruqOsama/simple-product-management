@@ -21,7 +21,7 @@ export function RestockButton() {
                 </DialogHeader>
                 <div className="py-2 space-y-2">
                     <Field>
-                        <FieldLabel htmlFor="input-stock-product">Tambahkan Stok</FieldLabel>
+                        <FieldLabel className="text-gray-600" htmlFor="input-stock-product">Tambahkan Stok</FieldLabel>
                         <Input 
                             id="input-stock-product"
                             placeholder="ex: 20"
