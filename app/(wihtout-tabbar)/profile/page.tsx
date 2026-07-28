@@ -4,7 +4,7 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { EyeIcon } from "@hugeicons/core-free-icons";
+import { EyeIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 
@@ -74,7 +74,11 @@ export default function ProfilePage() {
                             />
                             <InputGroupAddon align="inline-end">
                                 <button type="button" className="cursor-pointer" onClick={() => togglePassword("old")}>
-                                    <HugeiconsIcon icon={EyeIcon} size={18} className="text-muted-foreground me-1"/>
+                                    {
+                                        showPassword.old ?
+                                        (<HugeiconsIcon icon={ViewOffIcon} size={18} className="text-muted-foreground me-1"/>) :
+                                        (<HugeiconsIcon icon={EyeIcon} size={18} className="text-muted-foreground me-1"/>)
+                                    }
                                 </button>
                             </InputGroupAddon>
                         </InputGroup>
@@ -91,7 +95,11 @@ export default function ProfilePage() {
                             />
                             <InputGroupAddon align="inline-end">
                                 <button type="button" className="cursor-pointer" onClick={() => togglePassword("new")}>
-                                    <HugeiconsIcon icon={EyeIcon} size={18} className="text-muted-foreground me-1"/>
+                                    {
+                                        showPassword.new ?
+                                        (<HugeiconsIcon icon={ViewOffIcon} size={18} className="text-muted-foreground me-1"/>) :
+                                        (<HugeiconsIcon icon={EyeIcon} size={18} className="text-muted-foreground me-1"/>)
+                                    }
                                 </button>
                             </InputGroupAddon>
                         </InputGroup>
@@ -108,7 +116,11 @@ export default function ProfilePage() {
                             />
                             <InputGroupAddon align="inline-end">
                                 <button type="button" className="cursor-pointer" onClick={() => togglePassword("confirm")}>
-                                    <HugeiconsIcon icon={EyeIcon} size={18} className="text-muted-foreground me-1"/>
+                                    {
+                                        showPassword.confirm ?
+                                        (<HugeiconsIcon icon={ViewOffIcon} size={18} className="text-muted-foreground me-1"/>) :
+                                        (<HugeiconsIcon icon={EyeIcon} size={18} className="text-muted-foreground me-1"/>)
+                                    }
                                 </button>
                             </InputGroupAddon>
                         </InputGroup>

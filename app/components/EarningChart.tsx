@@ -16,18 +16,22 @@ import {
 export const description = "A bar chart with a label"
 
 const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
+  { month: "January", pemasukkan: 186, pengeluaran: 120 },
+  { month: "February", pemasukkan: 305, pengeluaran: 180 },
+  { month: "March", pemasukkan: 237, pengeluaran: 140 },
+  { month: "April", pemasukkan: 73, pengeluaran: 90 },
+  { month: "May", pemasukkan: 209, pengeluaran: 160 },
+  { month: "June", pemasukkan: 214, pengeluaran: 130 },
 ]
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  pemasukkan: {
+    label: "Pemasukkan",
     color: "#FF8400",
+  },
+  pengeluaran: {
+    label: "Pengeluaran",
+    color: "#114BE6",
   },
 } satisfies ChartConfig
 
@@ -55,7 +59,15 @@ export function EarningChart() {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8}>
+            <Bar dataKey="pengeluaran" fill="var(--color-pengeluaran)" radius={8}>
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
+            <Bar dataKey="pemasukkan" fill="var(--color-pemasukkan)" radius={8}>
               <LabelList
                 position="top"
                 offset={12}
