@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EditHistory } from "./EditHistory";
 import { DeleteHistory } from "./DeleteHistory";
 import { PrintHistory } from "./PrintHistory";
@@ -97,26 +97,43 @@ export function RiwayatCard() {
                                     <Table className="border rounded-md">
                                         <TableHeader>
                                             <TableRow>
-                                                <TableHead className="text-start font-semibold">Nama</TableHead>
-                                                <TableHead className="text-start font-semibold">Jumlah</TableHead>
+                                                <TableHead className="w-1/2 text-start font-semibold">Nama</TableHead>
+                                                <TableHead className="w-1/2 text-start font-semibold">Jumlah</TableHead>
+                                                <TableHead className="w-1/2 text-end font-semibold">Total</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
                                             <TableRow>
-                                                <TableCell className="w-1/3 align-top whitespace-normal wrap-break-word">
+                                                <TableCell className="w-1/2 align-top whitespace-normal wrap-break-word">
                                                     {item.nama_produk}
                                                 </TableCell>
-                                                <TableCell className="w-2/3 align-top whitespace-normal wrap-break-word">
+                                                <TableCell className="w-1/2 align-top whitespace-normal wrap-break-word">
                                                     {item.amount}   
+                                                </TableCell>
+                                                <TableCell className="w-1/2 align-top whitespace-normal wrap-break-word">
+                                                    Rp300.000
                                                 </TableCell>
                                             </TableRow>
                                         </TableBody>
+                                        <TableFooter>
+                                            <TableRow>
+                                                <TableCell className="w-1/2 align-top whitespace-normal wrap-break-word">
+                                                    Total
+                                                </TableCell>
+                                                <TableCell>
+                                                    90
+                                                </TableCell>
+                                                <TableCell className="w-1/2 align-top whitespace-normal wrap-break-word">
+                                                    Rp900.0000
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableFooter>
                                     </Table>
                                 </div>
-                                <div className="flex justify-between items-end">
+                                {/* <div className="flex justify-between items-end">
                                     <div className="text-start text-sm text-gray-600">Jumlah {item.is_restock ? "Pengeluaran" : "Pemasukkan"}</div>
                                     <div className="text-start text-gray-800">{item.amount}</div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
