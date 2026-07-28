@@ -5,6 +5,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/
 import { Textarea } from "@/components/ui/textarea";
 import { Edit02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { ProductImageUploader } from "./ProductImageUploader";
 
 export function EditProduct() {
     return (
@@ -82,6 +83,10 @@ export function EditProduct() {
                     <Field>
                         <FieldLabel className="text-gray-600" htmlFor="input-add-product-selling-price">Deskripsi</FieldLabel>
                         <Textarea></Textarea>
+                    </Field>
+                    <Field>
+                        <FieldLabel className="text-gray-600" htmlFor="input-add-product-thumbnail">Thumbnail</FieldLabel>
+                        <ProductImageUploader/>
                     </Field>
                 </div>
                 <DialogFooter>

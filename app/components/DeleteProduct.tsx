@@ -2,19 +2,19 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
-export function DeleteHistory() {
+export function DeleteProduct() {
     return (
         <AlertDialog>
             <AlertDialogTrigger>
-                    <div className="text-white bg-white/10 p-2 rounded-md hover:bg-white/20">
-                        <HugeiconsIcon icon={Delete02Icon} size={16}/>
-                    </div>
+                <div onClick={() => {}} className="cursor-pointer w-10 h-10 text-red-700 rounded-full bg-red-100 flex items-center justify-center border border-gray-100 shadow-sm p-2.5">
+                    <HugeiconsIcon icon={Delete02Icon} />
+                </div>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Menghapus riwayat transaksi akan berdampak ke data stok produk dan keuangan. Apakah Anda tetap ingin menghapusnya?
+                        Menghapus produk akan berdampak ke data transaksi dan keuangan. Apakah Anda tetap ingin menghapusnya?
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

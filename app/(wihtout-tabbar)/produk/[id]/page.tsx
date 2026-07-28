@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table";
 import { RestockButton } from "@/app/components/RestockButton";
 import { EditProduct } from "@/app/components/EditProduct";
+import { DeleteProduct } from "@/app/components/DeleteProduct";
 
 const placeholderImage =
     "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23e5e7eb'/%3E%3Cpath d='M120 250l48-52 38 38 28-30 46 44' fill='none' stroke='%239ca3af' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='160' cy='155' r='18' fill='%239ca3af'/%3E%3C/svg%3E";
@@ -169,9 +170,7 @@ export default function PengadaanDetailPage() {
                 <EditProduct/>
 
                 {/* hapus */}
-                <button onClick={() => {}} className="cursor-pointer w-10 h-10 text-red-700 rounded-full bg-red-100 flex items-center justify-center border border-gray-100 shadow-sm p-2.5">
-                    <HugeiconsIcon icon={Delete02Icon} />
-                </button>
+                <DeleteProduct/>
             </div>
             
             {/* image */}
