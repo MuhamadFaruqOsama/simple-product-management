@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EditHistory } from "./EditHistory";
 import { DeleteHistory } from "./DeleteHistory";
+import { PrintHistory } from "./PrintHistory";
 
 const dummyData = [
     {
@@ -81,6 +82,7 @@ export function RiwayatCard() {
 
                                     <EditHistory/>
                                     <DeleteHistory/>
+                                    <PrintHistory/>
                                 </div>
 
                                 <div className="absolute bg-white/10 h-40 w-40 rounded-full -left-6 -bottom-28"></div>
