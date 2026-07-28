@@ -1,7 +1,9 @@
 import { AddProduct } from "@/app/components/AddProduct";
 import { DrawerAddButton } from "@/app/components/DrawerAddButton";
 import { PengadaanCard } from "@/app/components/ProdukCard";
+import { Field, FieldDescription } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
@@ -35,10 +37,14 @@ export default function PengadaanPage() {
         </div>
 
         {/* search */}
-        <div className="relative my-3">
-            <Input placeholder="cari" className="bg-white"/>
-            <HugeiconsIcon icon={Search01Icon} className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-300"/>
-        </div>
+        <Field className="w-full my-3">
+          <InputGroup className="bg-white">
+            <InputGroupInput id="inline-start-input" placeholder="Cari..." required/>
+            <InputGroupAddon align="inline-start">
+              <HugeiconsIcon icon={Search01Icon} className="text-muted-foreground"/>
+            </InputGroupAddon>
+          </InputGroup>
+        </Field>
       </div>
 
 

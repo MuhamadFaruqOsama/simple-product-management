@@ -2,6 +2,8 @@ import { Input } from "@/components/ui/input";
 import { RiwayatCard } from "../../components/RiwayatCard";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Search01Icon } from "@hugeicons/core-free-icons";
+import { Field } from "@/components/ui/field";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 
 export default function RiwayatPage() {
     return (
@@ -28,10 +30,14 @@ export default function RiwayatPage() {
 
             <div className="px-2">
                 {/* search */}
-                <div className="relative my-3">
-                    <Input placeholder="cari" className="bg-white"/>
-                    <HugeiconsIcon icon={Search01Icon} className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-300"/>
-                </div>
+                <Field className="w-full my-3">
+                    <InputGroup className="bg-white">
+                        <InputGroupInput id="inline-start-input" placeholder="Cari..." required/>
+                        <InputGroupAddon align="inline-start">
+                        <HugeiconsIcon icon={Search01Icon} className="text-muted-foreground"/>
+                        </InputGroupAddon>
+                    </InputGroup>
+                </Field>
 
                 {/* list */}
                 <div className="space-y-2 pb-30">
