@@ -2,10 +2,7 @@
 
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   ChartContainer,
   ChartTooltip,
@@ -13,27 +10,27 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 
-export const description = "A bar chart with a label"
-
 const chartData = [
-  { month: "March", pemasukkan: 237, pengeluaran: 140 },
-  { month: "April", pemasukkan: 73, pengeluaran: 90 },
-  { month: "May", pemasukkan: 209, pengeluaran: 160 },
-  { month: "June", pemasukkan: 214, pengeluaran: 130 },
+  { product: "APD", jumlah: 186 },
+  { product: "Kaos Tangan", jumlah: 305 },
+  { product: "Masker", jumlah: 237 },
+  { product: "Sarung Tangan", jumlah: 73 },
+  { product: "Hand Sanitizer", jumlah: 209 },
+  { product: "Sepatu Safety", jumlah: 165 },
+  { product: "Rompi", jumlah: 142 },
+  { product: "Helm", jumlah: 128 },
+  { product: "Kacamata", jumlah: 96 },
+  { product: "Ear Plug", jumlah: 84 },
 ]
 
 const chartConfig = {
-  pemasukkan: {
-    label: "Pemasukkan",
+  jumlah: {
+    label: "Jumlah",
     color: "#FF8400",
-  },
-  pengeluaran: {
-    label: "Pengeluaran",
-    color: "#114BE6",
   },
 } satisfies ChartConfig
 
-export function EarningChart() {
+export function ProductAnalysisChart() {
   return (
     <Card>
       <CardContent>
@@ -47,25 +44,16 @@ export function EarningChart() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="product"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="pengeluaran" fill="var(--color-pengeluaran)" radius={8}>
-              <LabelList
-                position="top"
-                offset={12}
-                className="fill-foreground"
-                fontSize={12}
-              />
-            </Bar>
-            <Bar dataKey="pemasukkan" fill="var(--color-pemasukkan)" radius={8}>
+            <Bar dataKey="jumlah" fill="var(--color-jumlah)" radius={8}>
               <LabelList
                 position="top"
                 offset={12}
