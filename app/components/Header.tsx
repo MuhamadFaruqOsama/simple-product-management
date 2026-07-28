@@ -17,7 +17,7 @@ export default function Header() {
         <div className="px-2 py-3 flex justify-between items-center bg-white border-b border-gray-200">
             <div className="text-gray-800 font-medium text-xl capitalize">{page}</div>
             <Link href={`/profile`}>
-                <HugeiconsIcon icon={UserCircle02Icon} size={30} className="text-gray-500"/>
+                <HugeiconsIcon icon={UserCircle02Icon} size={32} className="text-gray-500"/>
             </Link>
         </div>
     )

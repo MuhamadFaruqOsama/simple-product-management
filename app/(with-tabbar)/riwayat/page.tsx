@@ -1,4 +1,3 @@
-import { Input } from "@/components/ui/input";
 import { RiwayatCard } from "../../components/RiwayatCard";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Search01Icon } from "@hugeicons/core-free-icons";

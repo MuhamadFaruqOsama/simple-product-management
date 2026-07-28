@@ -1,8 +1,8 @@
 import { AddProduct } from "@/app/components/AddProduct";
 import { DrawerAddButton } from "@/app/components/DrawerAddButton";
 import { PengadaanCard } from "@/app/components/ProdukCard";
-import { Field, FieldDescription } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { SortingProductButton } from "@/app/components/SortingProductButton";
+import { Field } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -31,7 +31,9 @@ export default function PengadaanPage() {
     <div className="relative">
       <div className="px-2">
         {/* tambah produk */}
-        <div className="flex justify-end mt-3">
+        <div className="flex justify-end gap-2 mt-3">
+          {/* sort */}
+          <SortingProductButton/>
           {/* total jual */}
           <AddProduct/>
         </div>
@@ -49,12 +51,15 @@ export default function PengadaanPage() {
 
 
       {/* products list */}
-      <div className="grid grid-cols-2 gap-2 px-2">
-        {
-          products.map((item, index) => (
-            <PengadaanCard key={index}/>
-          ))
-        }
+      <div className="px-2">
+        <p className="my-2 text-sm text-gray-500">Total produk: 30</p>
+        <div className="grid grid-cols-2 gap-2">
+          {
+            products.map((item, index) => (
+              <PengadaanCard key={index}/>
+            ))
+          }
+        </div>
       </div>
 
       {/* add button */}
