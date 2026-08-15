@@ -19,7 +19,10 @@ export async function verifyToken(token: string) {
     try {
         const { payload } = await jwtVerify(token, secret)
 
-        return payload
+        return {
+            id: payload.id as number,
+            username: payload.username as string
+        }
     } catch (error) {
         console.log(error)
         return null

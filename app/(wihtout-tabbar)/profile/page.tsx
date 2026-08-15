@@ -2,28 +2,10 @@
 
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { EyeIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { useState } from "react";
-
-type PasswordFieldKey = "old" | "new" | "confirm";
+import { ChangePassword } from "./components/ChangePassword";
 
 export default function ProfilePage() {
-    const [showPassword, setShowPassword] = useState<Record<PasswordFieldKey, boolean>>({
-        old: false,
-        new: false,
-        confirm: false,
-    });
-    
-    const togglePassword = (field: PasswordFieldKey) => {
-        setShowPassword((prev) => ({
-            ...prev,
-            [field]: !prev[field],
-        }));
-    };
-    
     return (
         <>
             {/* total saldo */}
@@ -58,81 +40,7 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            {/* reset password */}
-            <div className="bg-white p-2 rounded-md border border-gray-200 mb-3">
-                <h3 className="font-medium">Reset Password</h3>
-                <div className="mt-3 space-y-3">
-                    {/* password lama */}
-                    <Field className="w-full">
-                        <FieldLabel className="text-gray-600 -mb-1" htmlFor="input-old-password">Password Lama</FieldLabel>
-                        <InputGroup className="h-10 bg-white">
-                            <InputGroupInput
-                                id="input-old-password"
-                                type={showPassword.old ? "text" : "password"}
-                                className="h-10"
-                                required
-                            />
-                            <InputGroupAddon align="inline-end">
-                                <button type="button" className="cursor-pointer" onClick={() => togglePassword("old")}>
-                                    {
-                                        showPassword.old ?
-                                        (<HugeiconsIcon icon={ViewOffIcon} size={18} className="text-muted-foreground me-1"/>) :
-                                        (<HugeiconsIcon icon={EyeIcon} size={18} className="text-muted-foreground me-1"/>)
-                                    }
-                                </button>
-                            </InputGroupAddon>
-                        </InputGroup>
-                    </Field>
-                    {/* password baru */}
-                    <Field className="w-full">
-                        <FieldLabel className="text-gray-600 -mb-1" htmlFor="input-new-password">Password Baru</FieldLabel>
-                        <InputGroup className="h-10 bg-white">
-                            <InputGroupInput
-                                id="input-new-password"
-                                type={showPassword.new ? "text" : "password"}
-                                className="h-10"
-                                required
-                            />
-                            <InputGroupAddon align="inline-end">
-                                <button type="button" className="cursor-pointer" onClick={() => togglePassword("new")}>
-                                    {
-                                        showPassword.new ?
-                                        (<HugeiconsIcon icon={ViewOffIcon} size={18} className="text-muted-foreground me-1"/>) :
-                                        (<HugeiconsIcon icon={EyeIcon} size={18} className="text-muted-foreground me-1"/>)
-                                    }
-                                </button>
-                            </InputGroupAddon>
-                        </InputGroup>
-                    </Field>
-                    {/* konfirmasi password */}
-                    <Field className="w-full">
-                        <FieldLabel className="text-gray-600 -mb-1" htmlFor="input-confirm-password">Konfirmasi Password</FieldLabel>
-                        <InputGroup className="h-10 bg-white">
-                            <InputGroupInput
-                                id="input-confirm-password"
-                                type={showPassword.confirm ? "text" : "password"}
-                                className="h-10"
-                                required
-                            />
-                            <InputGroupAddon align="inline-end">
-                                <button type="button" className="cursor-pointer" onClick={() => togglePassword("confirm")}>
-                                    {
-                                        showPassword.confirm ?
-                                        (<HugeiconsIcon icon={ViewOffIcon} size={18} className="text-muted-foreground me-1"/>) :
-                                        (<HugeiconsIcon icon={EyeIcon} size={18} className="text-muted-foreground me-1"/>)
-                                    }
-                                </button>
-                            </InputGroupAddon>
-                        </InputGroup>
-                    </Field>
-                    {/* button simpan */}
-                    <div className="flex justify-end">
-                        <button className="h-10 px-5 rounded-md text-white bg-blue-500 text-sm font-medium">
-                            Ubah Password
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <ChangePassword/>
 
             {/* tarik saldo */}
             <div className="bg-white p-2 rounded-md border border-gray-200 mb-20">
