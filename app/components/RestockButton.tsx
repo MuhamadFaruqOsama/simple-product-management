@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { ShoppingBasketAdd03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
@@ -28,6 +29,21 @@ export function RestockButton() {
                             type="number"
                             required
                         />
+                    </Field>
+                    <Field>
+                        <FieldLabel className="text-gray-600" htmlFor="input-add-product-buying-price">Harga Beli</FieldLabel>
+                        <InputGroup className="h-10">
+                            <InputGroupAddon>
+                                <InputGroupText>Rp</InputGroupText>
+                            </InputGroupAddon>
+                            <InputGroupInput 
+                                placeholder="ex: 5000"
+                                id="input-add-product-buying-price"
+                                type="number"
+                                min={0}
+                                required 
+                            />
+                        </InputGroup>
                     </Field>
                 </div>
                 <DialogFooter>

@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Delete02Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
+import {    
     Table,
     TableBody,
     TableCell,

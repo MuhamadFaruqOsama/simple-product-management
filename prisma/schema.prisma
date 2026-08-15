@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  username   String
+  password   String
+  verifiedAt DateTime? @map("verified_at") @db.Timestamp(6)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt  DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  overallFinances        OverallFinance[]
+  withdrawBalanceHistory WithdrawBalanceHistory[]
+  products               Product[]
+  restockProducts        RestockProduct[]
+  sellProducts           SellProduct[]
+
+  @@map("users")
+}
+
+model OverallFinance {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @map("user_id")
+  totalIncome   Decimal  @default(0) @map("total_income") @db.Decimal(18, 2)
+  totalSpending Decimal  @default(0) @map("total_spending") @db.Decimal(18, 2)
+  date          DateTime @db.Date
+  lastUpdatedAt DateTime @updatedAt @map("last_updated_at") @db.Timestamp(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("overall_finances")
+}
+
+model WithdrawBalanceHistory {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  total     Decimal  @db.Decimal(18, 2)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("withdraw_balance_history")
+}
+
+model ProductFinance {
+  id            Int      @id @default(autoincrement())
+  productId     Int      @map("product_id")
+  totalIncome   Decimal  @default(0) @map("total_income") @db.Decimal(18, 2)
+  totalSpending Decimal  @default(0) @map("total_spending") @db.Decimal(18, 2)
+  date          DateTime @db.Date
+  lastUpdatedAt DateTime @updatedAt @map("last_updated_at") @db.Timestamp(6)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, date])
+  @@map("product_finances")
+}
+
+model Product {
+  id           Int       @id @default(autoincrement())
+  userId       Int       @map("user_id")
+  name         String
+  unit         String
+  totalStock   Float     @default(0) @map("total_remaining_stock")
+  volume       String
+  sellingPrice Decimal   @map("selling_price") @db.Decimal(18, 2)
+  description  String    @db.Text
+  thumbnail    String
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamp(6)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productFinances  ProductFinance[]
+  restockProducts  RestockProduct[]
+  listSellProducts ListSellProduct[]
+
+  @@map("product")
+}
+
+model RestockProduct {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @map("user_id")
+  productId     Int      @map("product_id")
+  quantity      Float    @map("restock_quantity")
+  remainingStock Float   @default(0) @map("remaining_stock")
+  purchasePrice Decimal  @map("purchase_price") @db.Decimal(18, 2)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("restock_product")
+}
+
+model SellProduct {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listSellProducts ListSellProduct[]
+
+  @@map("sell_product")
+}
+
+model ListSellProduct {
+  id            Int      @id @default(autoincrement())
+  sellProductId Int      @map("sell_product_id")
+  productId     Int      @map("product_id")
+  quantity      Float
+  sellingPrice  Decimal  @map("selling_price") @db.Decimal(18, 2)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  sellProduct SellProduct @relation(fields: [sellProductId], references: [id], onDelete: Cascade)
+  product     Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("list_sell_product")
+}
