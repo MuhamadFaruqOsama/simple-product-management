@@ -50,6 +50,7 @@ CREATE TABLE "product_finances" (
 -- CreateTable
 CREATE TABLE "product" (
     "id" SERIAL NOT NULL,
+    "uuid" TEXT NOT NULL DEFAULT gen_random_uuid(),
     "user_id" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "unit" TEXT NOT NULL,
@@ -62,7 +63,8 @@ CREATE TABLE "product" (
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "product_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "product_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "product_uuid_key" UNIQUE ("uuid")
 );
 
 -- CreateTable

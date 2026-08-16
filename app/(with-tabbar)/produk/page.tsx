@@ -12,32 +12,44 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function PengadaanPage() {
-  const [products, setProducts] = useState([])
+  const [search, setSearch] = useState("")
+  const [products, setProducts] = useState<any[]>([])
+  const [isDescOrder, setIsDescOrder] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+
+  const handleProductAdded = (product: any) => {
+    setProducts((prev) => [product, ...prev])
+  }
   
-  useEffect(() => {
-    async function getProduct() {
-      try {
-      
-        const response = await fetch("/api/product")
-        const result = await response.json()
-
-        if(!result.status) {
-          toast.error("Tidak dapat mengambil data produk")
-          return 
-        }
-
-        setProducts(result.data)
-        
-      } catch (error) {
-        console.error(error)
-        toast.error("Tidak dapat mengambil data produk. Coba lagi nanti")
-        return
-      } finally {
-        setIsLoading(false)
+  async function getProduct() {
+    try {
+      const response = await fetch("/api/product")
+      const result = await response.json()
+      if(!result.status) {
+        toast.error("Tidak dapat mengambil data produk")
+        return 
       }
+      setProducts(result.data)
+    } catch (error) {
+      console.error(error)
+      toast.error("Tidak dapat mengambil data produk. Coba lagi nanti")
+      return
+    } finally {
+      setIsLoading(false)
     }
+  }
 
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(search.toLowerCase())
+  )
+  
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+      return isDescOrder
+          ? b.totalStock - a.totalStock
+          : a.totalStock - b.totalStock
+  })
+
+  useEffect(() => {
     getProduct()
   }, [])
   
@@ -47,15 +59,23 @@ export default function PengadaanPage() {
         {/* tambah produk */}
         <div className="flex justify-end gap-2 mt-3">
           {/* sort */}
-          <SortingProductButton/>
+          <SortingProductButton
+            isDescOrder={isDescOrder}
+            onSortChange={() => setIsDescOrder(prev => !prev)}
+          />
           {/* total jual */}
-          <AddProduct/>
+          <AddProduct onProductAdded={handleProductAdded}/>
         </div>
 
         {/* search */}
         <Field className="w-full my-3">
           <InputGroup className="bg-white">
-            <InputGroupInput id="inline-start-input" placeholder="Cari..." required/>
+            <InputGroupInput 
+              id="inline-start-input" 
+              onChange={(e) => setSearch(e.target.value)} 
+              placeholder="Cari..." 
+              value={search}
+              required/>
             <InputGroupAddon align="inline-start">
               <HugeiconsIcon icon={Search01Icon} className="text-muted-foreground"/>
             </InputGroupAddon>
@@ -66,21 +86,21 @@ export default function PengadaanPage() {
 
       {/* products list */}
       <div className="px-2">
-        <p className="my-2 text-sm text-gray-500">Total produk: {isLoading ? "..." : products.length}</p>
-        <div className="grid grid-cols-2 gap-2 relative">
+        <p className="my-2 text-sm text-gray-500">Total produk: {isLoading ? "..." : sortedProducts.length}</p>
+        <div className="grid grid-cols-2 gap-2 relative pb-36">
           {
             isLoading ? (
               <div className="text-sm text-gray-500 col-span-2 mt-10 text-center">Sedang memuat produk...</div>
             ) : (
               <>
                 {
-                  products.map((item, index) => (
+                  sortedProducts.map((item) => (
                     <ProductCard
-                      id={item['id']}
+                      uuid={item['uuid']}
                       thumbnail={item['thumbnail']}
                       name={item['name']}
-                      stock={0}
-                      key={index}
+                      stock={item['totalStock']}
+                      key={item['uuid']}
                     />
                   ))
                 }

@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
 import { ProductImageUploader } from "./ProductImageUploader";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addProductFormSchema, type AddProductFormInput, type AddProductFormSchema } from "@/lib/validations/produtc";
@@ -14,7 +13,14 @@ import { FormErrorMessage } from "./FormErrorMessage";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function AddProduct() {
+type AddProductProps = {
+    onProductAdded: (product: any) => void
+}
+
+export function AddProduct(
+    {onProductAdded}: AddProductProps
+) {
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     
     const form = useForm<AddProductFormInput, undefined, AddProductFormSchema>({
@@ -62,6 +68,8 @@ export function AddProduct() {
 
             toast.success(result.message)
             setIsLoading(false)
+            onProductAdded(result.data)
+            setIsDialogOpen(false)
             reset()
             
         } catch (error) {
@@ -73,7 +81,7 @@ export function AddProduct() {
     }
     
     return (
-        <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger>
                 <div className="px-5 cursor-pointer py-2 text-sm text-white bg-blue-500 rounded-sm">
                     tambah produk

@@ -64,6 +64,7 @@ model ProductFinance {
 
 model Product {
   id           Int       @id @default(autoincrement())
+  uuid         String    @unique @default(uuid())
   userId       Int       @map("user_id")
   name         String
   unit         String

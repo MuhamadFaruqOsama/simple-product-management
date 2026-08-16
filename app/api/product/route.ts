@@ -5,7 +5,6 @@ import { isAuthenticated } from "../authHelper"
 
 export async function GET(req: NextRequest) {
     try {
-        
         const auth = await isAuthenticated(req)
         if (!auth.status) {
             return NextResponse.json({

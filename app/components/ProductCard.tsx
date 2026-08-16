@@ -9,7 +9,7 @@ const placeholderImage =
     "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23e5e7eb'/%3E%3Cpath d='M120 250l48-52 38 38 28-30 46 44' fill='none' stroke='%239ca3af' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='160' cy='155' r='18' fill='%239ca3af'/%3E%3C/svg%3E";
 
 type Product = {
-    id: number,
+    uuid: string,
     name: string,
     stock: number,
     thumbnail: string
@@ -48,7 +48,7 @@ export function ProductCard(data: Product) {
                         </div>
                     </div>
                     {/* detail */}
-                    <Link href={`produk/${data.id}`}>
+                    <Link href={`produk/${data.uuid}`}>
                         <div className="w-full text-center flex items-center gap-1 justify-center p-2 rounded-md text-sm mt-3 border border-gray-300 hover:bg-blue-500 transition-all duration-300 hover:text-white cursor-pointer">
                             Detail
                             <HugeiconsIcon icon={ArrowUpRight01Icon} size={16} strokeWidth={2}/>
