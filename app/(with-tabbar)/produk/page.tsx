@@ -2,7 +2,7 @@
 
 import { AddProduct } from "@/app/components/AddProduct";
 import { DrawerAddButton } from "@/app/components/DrawerAddButton";
-import { PengadaanCard } from "@/app/components/ProdukCard";
+import { ProductCard } from "@/app/components/ProductCard";
 import { SortingProductButton } from "@/app/components/SortingProductButton";
 import { Field } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
@@ -75,8 +75,9 @@ export default function PengadaanPage() {
               <>
                 {
                   products.map((item, index) => (
-                    <PengadaanCard
+                    <ProductCard
                       id={item['id']}
+                      thumbnail={item['thumbnail']}
                       name={item['name']}
                       stock={0}
                       key={index}

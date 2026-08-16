@@ -60,8 +60,6 @@ export function AddProduct() {
                 return
             }
 
-            console.log(result.message)
-            
             toast.success(result.message)
             setIsLoading(false)
             reset()

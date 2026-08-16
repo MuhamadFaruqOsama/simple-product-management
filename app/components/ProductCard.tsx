@@ -11,10 +11,11 @@ const placeholderImage =
 type Product = {
     id: number,
     name: string,
-    stock: number
+    stock: number,
+    thumbnail: string
 };
     
-export function PengadaanCard(data: Product) {
+export function ProductCard(data: Product) {
     return (
         <>
         <Dialog>
@@ -31,7 +32,7 @@ export function PengadaanCard(data: Product) {
 
                     <div style={{ position: 'relative', width: '100%', height: '200px' }}>
                         <Image
-                            src={placeholderImage}
+                            src={data.thumbnail ? data.thumbnail : placeholderImage}
                             alt="placeholder"
                             fill
                             style={{ objectFit: 'cover' }} // Agar gambar tidak terdistorsi/gepeng
