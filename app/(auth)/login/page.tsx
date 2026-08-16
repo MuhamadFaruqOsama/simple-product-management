@@ -51,9 +51,9 @@ export default function LoginPage() {
             }
 
             toast.success(result.message)
+            setIsLoading(false)
             router.push("/")
             
-            setIsLoading(false)
         } catch (error) {
             console.error(error)
             toast.error("Terjadi kesalahan pada server. Coba lagi nanti")

@@ -1,3 +1,5 @@
+"use client"
+
 import { AddProduct } from "@/app/components/AddProduct";
 import { DrawerAddButton } from "@/app/components/DrawerAddButton";
 import { PengadaanCard } from "@/app/components/ProdukCard";
@@ -6,26 +8,38 @@ import { Field } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function PengadaanPage() {
+  const [products, setProducts] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  
+  useEffect(() => {
+    async function getProduct() {
+      try {
+      
+        const response = await fetch("/api/product")
+        const result = await response.json()
 
-  const products = [
-    {
-      nama: "Produk A",
-      satuan: "pcs",
-      harga: 10000,
-      stok: 50,
-      volume: 30
-    },
-    {
-      nama: "Produk B",
-      satuan: "kg",
-      harga: 20000,
-      stok: 20,
-      volume: 1.5
-    },
+        if(!result.status) {
+          toast.error("Tidak dapat mengambil data produk")
+          return 
+        }
 
-  ]
+        setProducts(result.data)
+        
+      } catch (error) {
+        console.error(error)
+        toast.error("Tidak dapat mengambil data produk. Coba lagi nanti")
+        return
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    getProduct()
+  }, [])
   
   return (
     <div className="relative">
@@ -52,12 +66,25 @@ export default function PengadaanPage() {
 
       {/* products list */}
       <div className="px-2">
-        <p className="my-2 text-sm text-gray-500">Total produk: 30</p>
-        <div className="grid grid-cols-2 gap-2">
+        <p className="my-2 text-sm text-gray-500">Total produk: {isLoading ? "..." : products.length}</p>
+        <div className="grid grid-cols-2 gap-2 relative">
           {
-            products.map((item, index) => (
-              <PengadaanCard key={index}/>
-            ))
+            isLoading ? (
+              <div className="text-sm text-gray-500 col-span-2 mt-10 text-center">Sedang memuat produk...</div>
+            ) : (
+              <>
+                {
+                  products.map((item, index) => (
+                    <PengadaanCard
+                      id={item['id']}
+                      name={item['name']}
+                      stock={0}
+                      key={index}
+                    />
+                  ))
+                }
+              </>
+            )
           }
         </div>
       </div>

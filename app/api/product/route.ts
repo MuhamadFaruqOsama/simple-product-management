@@ -1,9 +1,72 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { addProductFormSchema } from "@/lib/validations/produtc"
+import { isAuthenticated } from "../authHelper"
 
-export async function POST(req: Request) {
+export async function GET(req: NextRequest) {
     try {
+        
+        const auth = await isAuthenticated(req)
+        if (!auth.status) {
+            return NextResponse.json({
+                status: false,
+                status_code: 401,
+                data: null,
+                message: auth.message
+            }, { status: 401 });
+        }
+
+        const userId = auth.payload?.id;
+
+        if (!userId) {
+            return NextResponse.json({
+                status: false,
+                status_code: 401,
+                data: null,
+                message: "User tidak terautentikasi"
+            }, { status: 401 });
+        }
+
+        const getProductData = await prisma.product.findMany({
+            where: {
+                userId: userId,
+                deletedAt: null
+            }
+        })
+
+        return NextResponse.json({
+            status: true,
+            status_code: 200,
+            data: getProductData,
+            message: "Berhasil mengambil data produk"
+        }, { status: 200 })
+        
+    } catch (error) {
+        console.error(error)
+
+        return NextResponse.json({
+            status: false,
+            status_code: 500,
+            data: null,
+            message: "Terjadi kesalahan dari sisi server. Coba lagi nanti"
+        }, { status: 500 })
+    }
+}
+
+export async function POST(req: NextRequest) {
+    try {
+        // is user authenticated
+        const auth = await isAuthenticated(req)
+
+        if(!auth.status) {
+            return NextResponse.json({
+                status: auth.status,
+                status_code: 401,
+                data: null,
+                message: auth.message
+            }, {status: 401})
+        }
+        
         const body = await req.json()
 
         // zod validation form backend
@@ -17,52 +80,72 @@ export async function POST(req: Request) {
             }, {status: 400})
         }
 
-        const userIdHeader = req.headers.get("x-user-id")
-        const userId = userIdHeader ? Number(userIdHeader) : Number.NaN
-
-        if (!userIdHeader || Number.isNaN(userId) || userId <= 0) {
+        const user_id = auth.payload?.id
+        if (typeof user_id !== "number") {
             return NextResponse.json({
                 status: false,
-                status_code: 400,
+                status_code: 401,
                 data: null,
-                message: "Header x-user-id wajib diisi dengan user id yang valid"
-            }, { status: 400 })
+                message: "unauthorized"
+            }, { status: 401 })
         }
 
-        const data = validation.data
-        const description = data.description ?? ""
-        const thumbnail = data.thumbnail ?? ""
-
-        const result = await prisma.$transaction(async (tx) => {
-            const product = await tx.product.create({
-                data: {
-                    userId,
-                    name: data.name,
-                    unit: data.unit,
-                    totalStock: data.quantity,
-                    volume: data.volume,
-                    sellingPrice: data.selling_price,
-                    description,
-                    thumbnail
-                }
-            })
-
-            const restockProduct = await tx.restockProduct.create({
-                data: {
-                    userId,
-                    productId: product.id,
-                    quantity: data.quantity,
-                    purchasePrice: data.purchase_price
-                }
-            })
-
-            return { product, restockProduct }
+        const {
+            name,
+            unit,
+            volume,
+            selling_price,
+            quantity,
+            purchase_price,
+            description,
+            thumbnail
+        } = validation.data
+        const safeDescription = description ?? ""
+        const safeThumbnail = thumbnail ?? ""
+        
+        const addProduct = await prisma.product.create({
+            data: {
+                userId: user_id,
+                name,
+                unit,
+                volume,
+                sellingPrice: selling_price,
+                description: safeDescription,
+                thumbnail: safeThumbnail
+            }
         })
+
+        if(!addProduct) {
+            return NextResponse.json({
+                status: false,
+                status_code: 433,
+                data: null,
+                message: "Tidak dapat menambahkan produk"
+            }, {status: 433})
+        }
+
+        const updateStockProduct = await prisma.restockProduct.create({
+            data: {
+                productId: addProduct.id,
+                quantity: quantity,
+                purchasePrice: purchase_price,
+                remainingStock: quantity
+            }
+        })
+
+        if(!updateStockProduct) {
+            return NextResponse.json({
+                status: false,
+                status_code: 433,
+                data: null,
+                message: "Total produk gagal ditambahkan"
+            }, { status: 433 })
+        }
 
         return NextResponse.json({
             status: true,
             status_code: 201,
-            data: result,
+            data: addProduct,
             message: "Produk berhasil ditambahkan"
         }, { status: 201 })
 

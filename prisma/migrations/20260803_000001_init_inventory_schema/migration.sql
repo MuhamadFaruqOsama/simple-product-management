@@ -68,7 +68,6 @@ CREATE TABLE "product" (
 -- CreateTable
 CREATE TABLE "restock_product" (
     "id" SERIAL NOT NULL,
-    "user_id" INTEGER NOT NULL,
     "product_id" INTEGER NOT NULL,
     "restock_quantity" DOUBLE PRECISION NOT NULL,
     "remaining_stock" DOUBLE PRECISION NOT NULL DEFAULT 0,
@@ -112,9 +111,6 @@ ALTER TABLE "product_finances" ADD CONSTRAINT "product_finances_product_id_fkey"
 
 -- AddForeignKey
 ALTER TABLE "product" ADD CONSTRAINT "product_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "restock_product" ADD CONSTRAINT "restock_product_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "restock_product" ADD CONSTRAINT "restock_product_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -163,9 +159,19 @@ RETURNS TRIGGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
+    v_user_id INTEGER;
     v_date DATE := DATE_TRUNC('day', NEW."created_at")::DATE;
     v_amount NUMERIC(18,2) := ROUND((NEW."restock_quantity"::NUMERIC * NEW."purchase_price"), 2);
 BEGIN
+    SELECT p."user_id"
+    INTO v_user_id
+    FROM "product" p
+    WHERE p."id" = NEW."product_id";
+
+    IF v_user_id IS NULL THEN
+        RAISE EXCEPTION 'product_id % does not exist or has no user_id', NEW."product_id";
+    END IF;
+
     UPDATE "product"
     SET "total_remaining_stock" = NEW."remaining_stock",
         "updated_at" = NOW()
@@ -199,7 +205,7 @@ BEGIN
         "last_updated_at"
     )
     VALUES (
-        NEW."user_id",
+        v_user_id,
         0,
         v_amount,
         v_date,
@@ -347,7 +353,6 @@ CREATE INDEX "idx_withdraw_balance_history_user_id" ON "withdraw_balance_history
 CREATE INDEX "idx_withdraw_balance_history_created_at" ON "withdraw_balance_history" ("created_at");
 CREATE INDEX "idx_product_user_id" ON "product" ("user_id");
 CREATE INDEX "idx_product_deleted_at" ON "product" ("deleted_at");
-CREATE INDEX "idx_restock_product_user_id" ON "restock_product" ("user_id");
 CREATE INDEX "idx_restock_product_product_id" ON "restock_product" ("product_id");
 CREATE INDEX "idx_restock_product_created_at" ON "restock_product" ("created_at");
 CREATE INDEX "idx_sell_product_user_id" ON "sell_product" ("user_id");

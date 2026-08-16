@@ -8,7 +8,13 @@ import Link from "next/link";
 const placeholderImage =
     "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23e5e7eb'/%3E%3Cpath d='M120 250l48-52 38 38 28-30 46 44' fill='none' stroke='%239ca3af' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='160' cy='155' r='18' fill='%239ca3af'/%3E%3C/svg%3E";
 
-export function PengadaanCard() {
+type Product = {
+    id: number,
+    name: string,
+    stock: number
+};
+    
+export function PengadaanCard(data: Product) {
     return (
         <>
         <Dialog>
@@ -34,14 +40,14 @@ export function PengadaanCard() {
                 
                     {/* details */}
                     <div className="flex flex-col gap-1 mt-2">
-                        <div className="text-md line-clamp-1 text-start">Nama Produk</div>
+                        <div className="text-md line-clamp-1 text-start">{data.name}</div>
                         <div className="flex justify-between items-end">
                             <div className="text-sm text-gray-600">Stok</div>
-                            <div className="">90</div>
+                            <div className="">{data.stock}</div>
                         </div>
                     </div>
                     {/* detail */}
-                    <Link href={`produk/dfalkfjdkaldjflkafdbasfdl`}>
+                    <Link href={`produk/${data.id}`}>
                         <div className="w-full text-center flex items-center gap-1 justify-center p-2 rounded-md text-sm mt-3 border border-gray-300 hover:bg-blue-500 transition-all duration-300 hover:text-white cursor-pointer">
                             Detail
                             <HugeiconsIcon icon={ArrowUpRight01Icon} size={16} strokeWidth={2}/>

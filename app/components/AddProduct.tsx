@@ -11,8 +11,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addProductFormSchema, type AddProductFormInput, type AddProductFormSchema } from "@/lib/validations/produtc";
 import { FormErrorMessage } from "./FormErrorMessage";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export function AddProduct() {
+    const [isLoading, setIsLoading] = useState(false)
+    
     const form = useForm<AddProductFormInput, undefined, AddProductFormSchema>({
         resolver: zodResolver(addProductFormSchema),
         defaultValues: {
@@ -30,11 +34,44 @@ export function AddProduct() {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors }
     } = form
 
-    const onSubmit = (data: AddProductFormSchema) => {
-        console.log(data)
+    const onSubmit = async (data: AddProductFormSchema) => {
+        try {
+            setIsLoading(true)
+            
+            const dataString = JSON.stringify(data)
+
+            const response = await fetch("/api/product", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: dataString
+            })
+
+            const result = await response.json()
+
+            if(!result.status) {
+                toast.error(result.message)
+                setIsLoading(false)
+                return
+            }
+
+            console.log(result.message)
+            
+            toast.success(result.message)
+            setIsLoading(false)
+            reset()
+            
+        } catch (error) {
+            console.error(error)
+            toast.error("Terjadi kesalahan dari sisi server. Coba lagi nanti" )
+            setIsLoading(false)
+            return
+        }
     }
     
     return (
@@ -162,7 +199,10 @@ export function AddProduct() {
                         </Field>
                     </div>
                     <DialogFooter>
-                        <button type="submit" className="w-full h-full bg-blue-500 py-3 rounded-md text-white">
+                        <button 
+                            type="submit" 
+                            disabled={isLoading}
+                            className="w-full h-full bg-blue-500 py-3 rounded-md text-white disabled:bg-blue-300">
                             Tambahkan
                         </button>
                     </DialogFooter>
