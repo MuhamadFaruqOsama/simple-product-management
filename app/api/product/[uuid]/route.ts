@@ -23,7 +23,8 @@ export async function GET(
         const getData = await prisma.product.findFirst({
             where: {
                 uuid,
-                userId
+                userId,
+                deletedAt: null
             },
             include: {
                 productFinances: true,
@@ -117,7 +118,6 @@ export async function DELETE(
 ) {
     try {
         const auth = await isAuthenticated(req);
-
         if (!auth.status) {
             return NextResponse.json({
                 status: false,

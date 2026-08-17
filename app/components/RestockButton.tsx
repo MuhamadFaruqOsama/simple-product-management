@@ -14,7 +14,11 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { useParams } from "next/navigation";
 
-export function RestockButton() {
+type RestockButtonProps = {
+    onRestocked?: (product: any) => void
+}
+
+export function RestockButton({ onRestocked }: RestockButtonProps) {
     const params = useParams<{ uuid: string }>()
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -58,8 +62,9 @@ export function RestockButton() {
             }
 
             toast.success(result.message)
+            onRestocked?.(result.data)
             setIsDialogOpen(false)
-            // reset()
+            reset()
             
         } catch (error) {
             console.error(error)

@@ -37,7 +37,7 @@ export async function POST(
             quantity,
             purchase_price
         } = validation.data
-        
+
         const createNewStock = await prisma.product.update({
             where: {
                 uuid

@@ -14,143 +14,10 @@ import { RestockButton } from "@/app/components/RestockButton";
 import { EditProduct } from "@/app/components/EditProduct";
 import { DeleteProduct } from "@/app/components/DeleteProduct";
 import { toast } from "sonner";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 const placeholderImage =
     "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23e5e7eb'/%3E%3Cpath d='M120 250l48-52 38 38 28-30 46 44' fill='none' stroke='%239ca3af' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='160' cy='155' r='18' fill='%239ca3af'/%3E%3C/svg%3E";
-
-const detailProductData = [
-    {
-        title: "nama",
-        value: "Produk"
-    },
-    {
-        title: "harga beli",
-        value: "Rp100.000"
-    },
-    {
-        title: "satuan",
-        value: "pcs"
-    },
-    {
-        title: "stok",
-        value: "90"
-    },
-    {
-        title: "volume",
-        value: "1,5kg"
-    },
-    {
-        title: "deskripsi",
-        value: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod."
-    },
-    {
-        title: "harga jual",
-        value: "Rp150.000"
-    },
-    {
-        title: "margin",
-        value: "Rp50.000"
-    },
-    {
-        title: "presentase margin",
-        value: "50%"
-    }
-]
-
-const detailKeuanganData = [
-    {
-        title: "total penjualan",
-        value: "Rp1.500.000"
-    },
-    {
-        title: "total pengadaan",
-        value: "Rp1.000.000"
-    },
-    {
-        title: "total keuntungan",
-        value: "Rp500.000"
-    },
-    {
-        title: "presentase keuntungan",
-        value: "50%"
-    }
-]
-
-
-// penjualan
-const detailPenjualanData = [
-    {
-        title: "penjualan pertama",
-        value: "28 jan 2026"
-    },
-    {
-        title: "total penjualan",
-        value: 8
-    },
-    {
-        title: "penjualan terakhir",
-        value: "28 jan 2026"
-    }
-]
-
-const riwayatPenjualanData = [
-    {
-        tanggal: "28 jan 2026",
-        jumlah: 4,
-        hargaJualSatuan: "Rp150.000",
-        total: "Rp600.000"
-    },
-    {
-        tanggal: "12 feb 2026",
-        jumlah: 2,
-        hargaJualSatuan: "Rp150.000",
-        total: "Rp300.000"
-    },
-    {
-        tanggal: "03 mar 2026",
-        jumlah: 6,
-        hargaJualSatuan: "Rp150.000",
-        total: "Rp900.000"
-    },
-]
-
-// pengadaan
-const detailPengadaanData = [
-    {
-        title: "pengadaan pertama",
-        value: "28 jan 2026"
-    },
-    {
-        title: "total pengadaan",
-        value: 8
-    },
-    {
-        title: "pengadaan terakhir",
-        value: "28 jan 2026"
-    }
-]
-
-const riwayatPengadaanData = [
-    {
-        tanggal: "28 jan 2026",
-        jumlah: 4,
-        hargaBeliSatuan: "Rp100.000",
-        total: "Rp400.000"
-    },
-    {
-        tanggal: "12 feb 2026",
-        jumlah: 2,
-        hargaBeliSatuan: "Rp100.000",
-        total: "Rp200.000"
-    },
-    {
-        tanggal: "03 mar 2026",
-        jumlah: 6,
-        hargaBeliSatuan: "Rp100.000",
-        total: "Rp600.000"
-    },
-]
 
 type ViewMode = "semua" | "penjualan" | "pengadaan";
 
@@ -238,6 +105,12 @@ export default function PengadaanDetailPage() {
 
     const isActive = (mode: ViewMode) => viewMode === mode;
 
+    const handleProductRestocked = async () => {
+        await getDetailProduct()
+    }
+    
+    const router = useRouter()
+
     async function getDetailProduct() {
         try {
             setIsLoading(true)
@@ -250,9 +123,10 @@ export default function PengadaanDetailPage() {
 
             if(!result.status) {
                 toast.error(result.message)
+                if(result.status_code === 404) router.push("/produk")
                 return
-            }
-
+            }            
+            
             setDetailProduct(result.data)
             
         } catch (error) {
@@ -273,7 +147,7 @@ export default function PengadaanDetailPage() {
             {/* edit */}
             <div className="flex justify-end mb-3 gap-2">
                 {/* restock */}
-                <RestockButton/>
+                <RestockButton onRestocked={handleProductRestocked}/>
                 
                 {/* edit */}
                 <EditProduct/>

@@ -27,6 +27,13 @@ export async function GET(req: NextRequest) {
         }
 
         const getProductData = await prisma.product.findMany({
+            select: {
+                id: true,
+                uuid: true,
+                name: true,
+                thumbnail: true,
+                totalStock: true
+            },
             where: {
                 userId: userId,
                 deletedAt: null

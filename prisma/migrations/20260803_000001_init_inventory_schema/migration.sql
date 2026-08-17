@@ -175,7 +175,7 @@ BEGIN
     END IF;
 
     UPDATE "product"
-    SET "total_remaining_stock" = NEW."remaining_stock",
+    SET "total_remaining_stock" = COALESCE("total_remaining_stock", 0) + NEW."restock_quantity",
         "updated_at" = NOW()
     WHERE "id" = NEW."product_id";
 
