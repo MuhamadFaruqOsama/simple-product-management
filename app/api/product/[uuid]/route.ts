@@ -27,8 +27,16 @@ export async function GET(
             },
             include: {
                 productFinances: true,
-                restockProducts: true,
-                listSellProducts: true
+                restockProducts: {
+                    orderBy: {
+                        createdAt: "desc"
+                    }
+                },
+                listSellProducts: {
+                    orderBy: {
+                        createdAt: "desc"
+                    }
+                }
             }
         })
 

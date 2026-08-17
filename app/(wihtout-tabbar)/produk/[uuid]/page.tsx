@@ -225,14 +225,14 @@ export default function PengadaanDetailPage() {
     // selling
     const selling = detailProduct?.listSellProducts
     const totalSelling = Number(selling?.length) ?? 0
-    const firstSelling = totalSelling > 0 ? formatIndonesianDate(selling?.[0]?.createdAt) : "-"
-    const lastSelling = totalSelling > 0 ? formatIndonesianDate(selling?.[totalSelling-1]?.createdAt) : "-"
+    const lastSelling = totalSelling > 0 ? formatIndonesianDate(selling?.[0]?.createdAt) : "-"
+    const firstSelling = totalSelling > 0 ? formatIndonesianDate(selling?.[totalSelling-1]?.createdAt) : "-"
     
     // restock
     const restock = detailProduct?.restockProducts
-    const firstRestock = formatIndonesianDate(restock?.[0]?.createdAt)
+    const lastRestock = formatIndonesianDate(restock?.[0]?.createdAt)
     const totalRestock = restock?.length ?? 0
-    const lastRestock = totalRestock > 0
+    const firstRestock = totalRestock > 0
         ? formatIndonesianDate(restock?.[totalRestock - 1]?.createdAt)
         : "-"
 

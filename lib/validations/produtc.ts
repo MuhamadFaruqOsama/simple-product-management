@@ -39,17 +39,18 @@ export const addProductStockSchema = z.object({
     quantity: z
         .coerce
         .number()
-        .min(0, "Jumlah stok tidak boleh kurang dari 0"),
+        .min(1, "Jumlah stok tidak boleh kurang dari 1"),
 
     purchase_price: z
         .coerce
         .number()
-        .min(0, "Harga beli tidak boleh kurang dari 0")
+        .min(1, "Harga beli tidak boleh kurang dari 1")
 })
 
 export const addProductFormSchema = addProductSchema.merge(addProductStockSchema)
 
 export type AddProductSchema = z.infer<typeof addProductSchema>
 export type AddProductStockSchema = z.infer<typeof addProductStockSchema>
+export type AddProductStockInput = z.input<typeof addProductStockSchema>
 export type AddProductFormInput = z.input<typeof addProductFormSchema>
 export type AddProductFormSchema = z.output<typeof addProductFormSchema>
