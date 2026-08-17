@@ -2,9 +2,67 @@ import { NextRequest, NextResponse } from "next/server";
 import { isAuthenticated } from "../../authHelper";
 import { prisma } from "@/lib/prisma";
 
+export async function GET(
+    req: NextRequest,
+    { params }: { params: Promise<{uuid: string}> }
+) {
+    try {
+        const auth = await isAuthenticated(req)
+        if(!auth.status) {
+            return NextResponse.json({
+                status: false,
+                status_code: 401,
+                data: null,
+                message: auth.message
+            }, {status: 401})
+        }
+
+        const { uuid } = await params
+        const userId = auth.payload?.id
+
+        const getData = await prisma.product.findFirst({
+            where: {
+                uuid,
+                userId
+            },
+            include: {
+                productFinances: true,
+                restockProducts: true,
+                listSellProducts: true
+            }
+        })
+
+        if(!getData) {
+            return NextResponse.json({
+                status: false,
+                status_code: 404,
+                data: null,
+                message: "Detail data produk tidak ditemukan"
+            }, {status: 404})
+        }
+        
+        return NextResponse.json({
+            status: true,
+            status_code: 200,
+            data: getData,
+            message: "Berhasil mendapatkan detail data produk"
+        }, {status: 200})
+        
+    } catch (error) {
+        console.error(error)
+
+        return NextResponse.json({
+            status: false,
+            status_code: 500,
+            data: null,
+            message: "Terjadi kesalahan pada sisi server. Coba lagi nanti"
+        }, { status: 500 })
+    }
+}
+
 export async function UPDATE(
     req: NextRequest,
-    { params }: { params: Promise<{id: string}> }
+    { params }: { params: Promise<{uuid: string}> }
 ) {
     try {
         
@@ -19,18 +77,8 @@ export async function UPDATE(
             }, { status: 401 });
         }
 
-        const { id } = await params;
-        const numberId = Number(id);
+        const { uuid } = await params;
         const userId = auth.payload?.id;
-
-        if (!Number.isInteger(numberId)) {
-            return NextResponse.json({
-                status: false,
-                status_code: 400,
-                data: null,
-                message: "ID produk tidak valid"
-            }, { status: 400 });
-        }
 
         if (!userId) {
             return NextResponse.json({
@@ -57,7 +105,7 @@ export async function UPDATE(
 
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: Promise<{ uuid: string }> }
 ) {
     try {
         const auth = await isAuthenticated(req);
@@ -71,18 +119,8 @@ export async function DELETE(
             }, { status: 401 });
         }
 
-        const { id } = await params;
-        const numberId = Number(id);
+        const { uuid } = await params;
         const userId = auth.payload?.id;
-
-        if (!Number.isInteger(numberId)) {
-            return NextResponse.json({
-                status: false,
-                status_code: 400,
-                data: null,
-                message: "ID produk tidak valid"
-            }, { status: 400 });
-        }
 
         if (!userId) {
             return NextResponse.json({
@@ -95,7 +133,7 @@ export async function DELETE(
 
         const result = await prisma.product.updateMany({
             where: {
-                id: numberId,
+                uuid: uuid,
                 userId,
                 deletedAt: null
             },
