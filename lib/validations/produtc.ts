@@ -50,6 +50,7 @@ export const addProductStockSchema = z.object({
 export const addProductFormSchema = addProductSchema.merge(addProductStockSchema)
 
 export type AddProductSchema = z.infer<typeof addProductSchema>
+export type AddProductInput = z.input<typeof addProductSchema>
 export type AddProductStockSchema = z.infer<typeof addProductStockSchema>
 export type AddProductStockInput = z.input<typeof addProductStockSchema>
 export type AddProductFormInput = z.input<typeof addProductFormSchema>

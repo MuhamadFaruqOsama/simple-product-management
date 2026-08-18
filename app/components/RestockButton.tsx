@@ -83,7 +83,7 @@ export function RestockButton({
     return (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger>
-                <div onClick={() => {}} className="cursor-pointer w-10 h-10 rounded-full bg-white flex items-center justify-center border border-gray-100 shadow-sm p-2.5">
+                <div className="cursor-pointer w-10 h-10 rounded-full bg-white flex items-center justify-center border border-gray-100 shadow-sm p-2.5">
                     <HugeiconsIcon icon={ShoppingBasketAdd03Icon} />
                 </div>
             </DialogTrigger>
@@ -119,7 +119,7 @@ export function RestockButton({
                                     placeholder="ex: 5000"
                                     id="input-add-product-buying-price"
                                     type="number"
-                                    value={purchasePrice}
+                                    defaultValue={purchasePrice}
                                     min={0}
                                     {...register('purchase_price')}
                                     required

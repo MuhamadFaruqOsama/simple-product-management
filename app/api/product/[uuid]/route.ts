@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAuthenticated } from "../../authHelper";
 import { prisma } from "@/lib/prisma";
+import { addProductSchema } from "@/lib/validations/produtc";
 
 export async function GET(
     req: NextRequest,
@@ -69,14 +70,12 @@ export async function GET(
     }
 }
 
-export async function UPDATE(
+export async function PUT(
     req: NextRequest,
     { params }: { params: Promise<{uuid: string}> }
 ) {
     try {
-        
         const auth = await isAuthenticated(req)
-
         if (!auth.status) {
             return NextResponse.json({
                 status: false,
@@ -98,7 +97,57 @@ export async function UPDATE(
             }, { status: 401 });
         }
 
-        // const validation =
+        const body = await req.json()
+        
+        const validation = addProductSchema.safeParse(body)
+        if(!validation.success) {
+            return NextResponse.json({
+                status: false,
+                status_code: 400,
+                data: null,
+                message: validation.error.issues.map(issue => issue.message).join(", ")
+            }, {status: 400})
+        }
+
+        const {
+            name,
+            unit,
+            selling_price,
+            volume,
+            description,
+            thumbnail
+        } = validation.data
+        
+        const updateProduct = await prisma.product.update({
+            where: {
+                uuid,
+                userId
+            },
+            data: {
+                name,
+                unit,
+                sellingPrice: selling_price,
+                volume,
+                description,
+                thumbnail
+            }
+        })
+
+        if(!updateProduct) {
+            return NextResponse.json({
+                status: false,
+                status_code: 433,
+                data: null,
+                message: "Tidak dapat merubah data produk. Coba lagi nanti"
+            }, {status: 433})
+        }
+
+        return NextResponse.json({
+            status: true,
+            status_code: 200,
+            data: updateProduct,
+            message: "Data produk berhasil diubah"
+        }, {status: 200})
         
     } catch (error) {
         console.error(error)
