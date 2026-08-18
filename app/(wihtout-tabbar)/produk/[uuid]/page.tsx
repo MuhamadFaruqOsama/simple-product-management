@@ -157,7 +157,10 @@ export default function PengadaanDetailPage() {
                             
                             {/* edit */}
                             {detailProduct && (
-                                <EditProduct item={detailProduct} />
+                                <EditProduct
+                                    item={detailProduct}
+                                    onUpdated={getDetailProduct}
+                                />
                             )}
 
                             {/* hapus */}

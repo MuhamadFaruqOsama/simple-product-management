@@ -28,9 +28,10 @@ type ProductDetail = {
 
 type EditProductProps = {
     item?: ProductDetail | null;
+    onUpdated?: () => void | Promise<void>;
 };
 
-export function EditProduct({ item }: EditProductProps) {
+export function EditProduct({ item, onUpdated }: EditProductProps) {
     const [isLoading, setIsLoading] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const params = useParams()
@@ -84,6 +85,7 @@ export function EditProduct({ item }: EditProductProps) {
                 return
             }
 
+            await onUpdated?.()
             setIsDialogOpen(false)
             toast.success(result.message)
             return
