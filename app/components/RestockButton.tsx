@@ -15,10 +15,15 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 
 type RestockButtonProps = {
+    purchasePrice: number;
     onRestocked?: (product: any) => void
 }
 
-export function RestockButton({ onRestocked }: RestockButtonProps) {
+export function RestockButton({
+    purchasePrice,
+    onRestocked
+} : RestockButtonProps
+) {
     const params = useParams<{ uuid: string }>()
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -26,7 +31,7 @@ export function RestockButton({ onRestocked }: RestockButtonProps) {
         resolver: zodResolver(addProductStockSchema),
         defaultValues: {
             quantity: 0,
-            purchase_price: 0
+            purchase_price: purchasePrice
         }
     })
 
@@ -114,6 +119,7 @@ export function RestockButton({ onRestocked }: RestockButtonProps) {
                                     placeholder="ex: 5000"
                                     id="input-add-product-buying-price"
                                     type="number"
+                                    value={purchasePrice}
                                     min={0}
                                     {...register('purchase_price')}
                                     required

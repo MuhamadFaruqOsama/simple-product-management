@@ -42,21 +42,6 @@ export function EditProduct() {
                         />
                     </Field>
                     <Field>
-                        <FieldLabel className="text-gray-600" htmlFor="input-add-product-buying-price">Harga Beli</FieldLabel>
-                        <InputGroup className="h-10">
-                            <InputGroupAddon>
-                                <InputGroupText>Rp</InputGroupText>
-                            </InputGroupAddon>
-                            <InputGroupInput 
-                                placeholder="ex: 5000"
-                                id="input-add-product-buying-price"
-                                type="number"
-                                min={0}
-                                required 
-                            />
-                        </InputGroup>
-                    </Field>
-                    <Field>
                         <FieldLabel className="text-gray-600" htmlFor="input-add-product-volume">Volume</FieldLabel>
                         <Input 
                             id="input-add-product-volume"

@@ -147,7 +147,10 @@ export default function PengadaanDetailPage() {
             {/* edit */}
             <div className="flex justify-end mb-3 gap-2">
                 {/* restock */}
-                <RestockButton onRestocked={handleProductRestocked}/>
+                <RestockButton 
+                    onRestocked={handleProductRestocked} 
+                    purchasePrice={isLoading ? 0 : Number(restock?.[0].purchasePrice)}
+                />
                 
                 {/* edit */}
                 <EditProduct/>
