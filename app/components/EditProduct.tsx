@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Edit02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ProductImageUploader } from "./ProductImageUploader";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { AddProductInput, addProductSchema, AddProductSchema } from "@/lib/validations/product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormErrorMessage } from "./FormErrorMessage";
@@ -43,13 +43,14 @@ export function EditProduct({ item }: EditProductProps) {
             volume: item?.volume ?? "",
             selling_price: item?.sellingPrice ?? 0,
             description: item?.description ?? "",
-            thumbnail: item?.thumbnail ?? ""
+            thumbnail: null
         }
     })
 
     const {
         register,
         handleSubmit,
+        control,
         formState: {errors}
     } = form
 
@@ -58,14 +59,22 @@ export function EditProduct({ item }: EditProductProps) {
             setIsLoading(true)
 
             const uuid = params.uuid
-            const dataString = JSON.stringify(data)
+
+            const formData = new FormData()
+
+            formData.append("name", data.name)
+            formData.append("unit", data.unit)
+            formData.append("volume", data.volume)
+            formData.append("selling_price", String(data.selling_price))
+            formData.append("description", String(data.description))
+
+            if(data.thumbnail) {
+                formData.append("thumbnail", data.thumbnail)
+            }
 
             const response = await fetch(`/api/product/${uuid}`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: dataString
+                body: formData
             })
 
             const result = await response.json()
@@ -174,11 +183,25 @@ export function EditProduct({ item }: EditProductProps) {
                             )}
                         </Field>
                         <Field>
-                            <FieldLabel className="text-gray-600" htmlFor="input-add-product-thumbnail">Thumbnail</FieldLabel>
-                            <ProductImageUploader/>
-                            {errors.thumbnail && (
-                                <FormErrorMessage message={errors.thumbnail.message as string}/>
-                            )}
+                            <FieldLabel className="text-gray-600 flex items-end" htmlFor="input-add-product-thumbnail">
+                                <div>Thumbnail</div>
+                                <small>*Kosongkan thumbnail jika tidak ingin diubah</small>
+                            </FieldLabel>
+                            <Controller
+                                name="thumbnail"
+                                control={control}
+                                render={({field, fieldState}) => (
+                                    <>
+                                        <ProductImageUploader
+                                            value={field.value ?? null}
+                                            onChange={field.onChange}
+                                        />
+                                        {errors.thumbnail && (
+                                            <FormErrorMessage message={errors.thumbnail.message as string} />
+                                        )}
+                                    </>
+                                )}
+                            />
                         </Field>
                     </div>
                     <DialogFooter>
