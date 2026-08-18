@@ -30,9 +30,14 @@ export const addProductSchema = z.object({
         .optional(),
 
     thumbnail: z
-        .string()
-        .trim()
-        .optional()
+        .instanceof(File)
+        .nullable()
+        .refine(
+            (file) =>
+                !file ||
+                ["image/jpeg", "image/png"].includes(file.type),
+            "Format gambar harus JPG, JPEG, atau PNG"
+        )
 })
 
 export const addProductStockSchema = z.object({

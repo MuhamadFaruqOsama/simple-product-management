@@ -1,6 +1,6 @@
 import { isAuthenticated } from "@/app/api/authHelper";
 import { prisma } from "@/lib/prisma";
-import { addProductStockSchema } from "@/lib/validations/produtc";
+import { addProductStockSchema } from "@/lib/validations/product";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(

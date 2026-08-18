@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
 import { ProductImageUploader } from "./ProductImageUploader";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addProductFormSchema, type AddProductFormInput, type AddProductFormSchema } from "@/lib/validations/produtc";
+import { addProductFormSchema, type AddProductFormInput, type AddProductFormSchema } from "@/lib/validations/product";
 import { FormErrorMessage } from "./FormErrorMessage";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -33,7 +33,7 @@ export function AddProduct(
             quantity: 0,
             purchase_price: 0,
             description: "",
-            thumbnail: ""
+            thumbnail: null
         }
     })
 
@@ -41,6 +41,7 @@ export function AddProduct(
         register,
         handleSubmit,
         reset,
+        control,
         formState: { errors }
     } = form
 
@@ -48,14 +49,23 @@ export function AddProduct(
         try {
             setIsLoading(true)
             
-            const dataString = JSON.stringify(data)
+            const formData = new FormData()
+
+            formData.append("name", data.name)
+            formData.append("unit", data.unit)
+            formData.append("volume", data.volume)
+            formData.append("purchase_price", String(data.purchase_price))
+            formData.append("selling_price", String(data.selling_price))
+            formData.append("quantity", String(data.quantity))
+            formData.append("description", String(data.description))
+
+            if(data.thumbnail) {
+                formData.append("thumbnail", data.thumbnail)
+            }
 
             const response = await fetch("/api/product", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: dataString
+                body: formData
             })
 
             const result = await response.json()
@@ -198,10 +208,21 @@ export function AddProduct(
                         </Field>
                         <Field>
                             <FieldLabel className="text-gray-600" htmlFor="input-add-product-thumbnail">Thumbnail</FieldLabel>
-                            <ProductImageUploader/>
-                            {errors.thumbnail && (
-                                <FormErrorMessage message={errors.thumbnail.message as string} />
-                            )}
+                            <Controller
+                                name="thumbnail"
+                                control={control}
+                                render={({field, fieldState}) => (
+                                    <>
+                                        <ProductImageUploader
+                                            value={field.value ?? null}
+                                            onChange={field.onChange}
+                                        />
+                                        {errors.thumbnail && (
+                                            <FormErrorMessage message={errors.thumbnail.message as string} />
+                                        )}
+                                    </>
+                                )}
+                            />
                         </Field>
                     </div>
                     <DialogFooter>

@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
-import { addProductStockSchema, type AddProductStockInput, type AddProductStockSchema } from "@/lib/validations/produtc";
+import { addProductStockSchema, type AddProductStockInput, type AddProductStockSchema } from "@/lib/validations/product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ShoppingBasketAdd03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAuthenticated } from "../../authHelper";
 import { prisma } from "@/lib/prisma";
-import { addProductSchema } from "@/lib/validations/produtc";
+import { addProductSchema } from "@/lib/validations/product";
+import { supabaseAdmin } from "@/lib/supabase/server";
 
 export async function GET(
     req: NextRequest,
@@ -50,11 +51,24 @@ export async function GET(
                 message: "Detail data produk tidak ditemukan"
             }, {status: 404})
         }
+
+        let product = getData
+
+        if (getData.thumbnail) {
+            const { data } = supabaseAdmin.storage
+                .from("products")
+                .getPublicUrl(getData.thumbnail)
+
+            product = {
+                ...getData,
+                thumbnail: data.publicUrl
+            }
+        }
         
         return NextResponse.json({
             status: true,
             status_code: 200,
-            data: getData,
+            data: product,
             message: "Berhasil mendapatkan detail data produk"
         }, {status: 200})
         

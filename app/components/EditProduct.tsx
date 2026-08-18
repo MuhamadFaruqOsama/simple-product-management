@@ -9,7 +9,7 @@ import { Edit02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ProductImageUploader } from "./ProductImageUploader";
 import { useForm } from "react-hook-form";
-import { AddProductInput, addProductSchema, AddProductSchema } from "@/lib/validations/produtc";
+import { AddProductInput, addProductSchema, AddProductSchema } from "@/lib/validations/product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormErrorMessage } from "./FormErrorMessage";
 import { useState } from "react";

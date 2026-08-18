@@ -11,21 +11,35 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
 
-export function ProductImageUploader() {
-  const [files, setFiles] = useState<FilePondFile[]>([])
+type ProductImageUploaderProps = {
+  value: File | null;
+  onChange: (file: File | null) => void
+}
+
+export function ProductImageUploader({
+  value,
+  onChange
+}: ProductImageUploaderProps) {
+    const handleUpdateFiles = (fileItems: FilePondFile[]) => {
+      const file = fileItems[0]?.file;
+      onChange(file instanceof File ? file : null);
+    };
 
   return (
     <div className="w-full">
       <FilePond
-        onupdatefiles={setFiles}
-        allowMultiple
-        maxFiles={3}
-        server="/api"
-        name="files"
+        files={value ? [value] : []}
+        onupdatefiles={handleUpdateFiles}
+        maxFiles={1}
+        name="thumbnail"
+        acceptedFileTypes={[
+            "image/jpeg",
+            "image/png"
+        ]}
         labelIdle='Seret & Lepas file Anda atau <span class="filepond--label-action">Telusuri</span>'
       />
       <p className="mt-2 text-xs text-muted-foreground">
-        {files.length > 0 ? `${files.length} file dipilih` : 'Belum ada file yang dipilih'}
+        {value ? `${value} file dipilih` : 'Belum ada file yang dipilih'}
       </p>
     </div>
   )

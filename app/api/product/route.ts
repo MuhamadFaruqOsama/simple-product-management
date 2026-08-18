@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { addProductFormSchema } from "@/lib/validations/produtc"
+import { addProductFormSchema } from "@/lib/validations/product"
 import { isAuthenticated } from "../authHelper"
+import { processProductImage } from "@/lib/image"
+import { supabaseAdmin } from "@/lib/supabase/server"
 
 export async function GET(req: NextRequest) {
     try {
@@ -40,10 +42,25 @@ export async function GET(req: NextRequest) {
             }
         })
 
+        const products = getProductData.map((product) => {
+            if (!product.thumbnail) {
+                return product
+            }
+
+            const { data } = supabaseAdmin.storage
+                .from("products")
+                .getPublicUrl(product.thumbnail)
+
+            return {
+                ...product,
+                thumbnail: data.publicUrl
+            }
+        })
+
         return NextResponse.json({
             status: true,
             status_code: 200,
-            data: getProductData,
+            data: products,
             message: "Berhasil mengambil data produk"
         }, { status: 200 })
         
@@ -73,7 +90,19 @@ export async function POST(req: NextRequest) {
             }, {status: 401})
         }
         
-        const body = await req.json()
+        const formData = await req.formData();
+        const getThumbnail = formData.get("thumbnail");
+
+        const body = {
+            name: formData.get("name"),
+            unit: formData.get("unit"),
+            volume: formData.get("volume"),
+            selling_price: Number(formData.get("selling_price")),
+            quantity: Number(formData.get("quantity")),
+            purchase_price: Number(formData.get("purchase_price")),
+            description: formData.get("description"),
+            thumbnail: getThumbnail instanceof File ? getThumbnail : null
+        };
 
         // zod validation form backend
         const validation = addProductFormSchema.safeParse(body)
@@ -106,8 +135,24 @@ export async function POST(req: NextRequest) {
             description,
             thumbnail
         } = validation.data
-        const safeDescription = description ?? ""
-        const safeThumbnail = thumbnail ?? ""
+        
+        const processedImage = thumbnail ?
+            await processProductImage(thumbnail) : null
+
+        if(thumbnail && !processedImage) {
+            return NextResponse.json({
+                status: false,
+                status_code: 400,
+                data: null,
+                message: "Tidak dapat memproses gambar. Coba lagi nanti"
+            }, {status: 400})
+        }
+
+        let thumbnailPath = ""
+        if(thumbnail && processedImage) {
+            const fileName = `${crypto.randomUUID()}.webp`
+            thumbnailPath = `products/${user_id}/${fileName}`
+        }
         
         const addProduct = await prisma.product.create({
             data: {
@@ -116,8 +161,8 @@ export async function POST(req: NextRequest) {
                 unit,
                 volume,
                 sellingPrice: selling_price,
-                description: safeDescription,
-                thumbnail: safeThumbnail
+                description: description as string,
+                thumbnail: thumbnailPath
             }
         })
 
@@ -128,6 +173,26 @@ export async function POST(req: NextRequest) {
                 data: null,
                 message: "Tidak dapat menambahkan produk"
             }, {status: 433})
+        }
+
+        if(thumbnail && processedImage) {
+            const { error: uploadError } = await supabaseAdmin.storage
+                .from("products")
+                .upload(thumbnailPath, processedImage, {
+                    contentType: "image/webp",
+                    upsert: false
+                })
+
+            if (uploadError) {
+                console.error(uploadError)
+
+                return NextResponse.json({
+                    status: false,
+                    status_code: 500,
+                    data: null,
+                    message: "Gagal mengupload thumbnail"
+                }, { status: 500 })
+            }
         }
 
         const updateStockProduct = await prisma.restockProduct.create({

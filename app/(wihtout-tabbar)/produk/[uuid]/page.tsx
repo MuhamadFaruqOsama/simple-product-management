@@ -171,7 +171,10 @@ export default function PengadaanDetailPage() {
             <div className="mb-5 w-full overflow-hidden rounded-lg">
                 <div style={{ position: 'relative', width: '100%', height: '300px' }}>
                     <Image
-                        src={placeholderImage}
+                        src={
+                            detailProduct?.thumbnail ? 
+                            detailProduct.thumbnail : placeholderImage
+                        }
                         alt="placeholder"
                         fill
                         style={{ objectFit: 'cover' }} // Agar gambar tidak terdistorsi/gepeng
