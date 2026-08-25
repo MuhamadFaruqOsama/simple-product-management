@@ -34,7 +34,8 @@ export async function GET(req: NextRequest) {
                 uuid: true,
                 name: true,
                 thumbnail: true,
-                totalStock: true
+                totalStock: true,
+                sellingPrice: true
             },
             where: {
                 userId: userId,
@@ -153,27 +154,6 @@ export async function POST(req: NextRequest) {
             const fileName = `${crypto.randomUUID()}.webp`
             thumbnailPath = `products/${user_id}/${fileName}`
         }
-        
-        const addProduct = await prisma.product.create({
-            data: {
-                userId: user_id,
-                name,
-                unit,
-                volume,
-                sellingPrice: selling_price,
-                description: description as string,
-                thumbnail: thumbnailPath
-            }
-        })
-
-        if(!addProduct) {
-            return NextResponse.json({
-                status: false,
-                status_code: 433,
-                data: null,
-                message: "Tidak dapat menambahkan produk"
-            }, {status: 433})
-        }
 
         if(thumbnail && processedImage) {
             const { error: uploadError } = await supabaseAdmin.storage
@@ -195,28 +175,76 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        const updateStockProduct = await prisma.restockProduct.create({
-            data: {
-                productId: addProduct.id,
-                quantity: quantity,
-                purchasePrice: purchase_price,
-                remainingStock: quantity
-            }
-        })
+        let result
+        
+        try {
+            result = await prisma.$transaction(async (tx) => {
+                const addProduct = await tx.product.create({
+                    data: {
+                        userId: user_id,
+                        name,
+                        unit,
+                        volume,
+                        sellingPrice: selling_price,
+                        description: description as string,
+                        thumbnail: thumbnailPath
+                    }
+                })
 
-        if(!updateStockProduct) {
+                const updateStockProduct = await tx.restockProduct.create({
+                    data: {
+                        productId: addProduct.id,
+                        quantity: quantity,
+                        purchasePrice: purchase_price
+                    }
+                })
+
+                return {
+                    addProduct,
+                    updateStock: updateStockProduct
+                }
+            })
+        } catch (error) {
+            if(thumbnailPath) {
+                await supabaseAdmin.storage
+                    .from("products")
+                    .remove([thumbnailPath]);
+            }
+
+            throw error;
+        }
+
+        const {
+            addProduct,
+            updateStock
+        } = result
+    
+        if(!addProduct || !updateStock) {
             return NextResponse.json({
                 status: false,
                 status_code: 433,
                 data: null,
-                message: "Total produk gagal ditambahkan"
-            }, { status: 433 })
+                message: "Tidak dapat menambahkan produk"
+            }, {status: 433})
+        }
+
+        let product = addProduct
+
+        if (addProduct.thumbnail) {
+            const { data } = supabaseAdmin.storage
+                .from("products")
+                .getPublicUrl(addProduct.thumbnail)
+
+            product = {
+                ...addProduct,
+                thumbnail: data.publicUrl
+            }
         }
 
         return NextResponse.json({
             status: true,
             status_code: 201,
-            data: addProduct,
+            data: product,
             message: "Produk berhasil ditambahkan"
         }, { status: 201 })
 

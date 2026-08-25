@@ -101,6 +101,7 @@ export default function PengadaanPage() {
                       name={item['name']}
                       stock={item['totalStock']}
                       key={item['uuid']}
+                      sellingPrice={item['sellingPrice']}
                     />
                   ))
                 }

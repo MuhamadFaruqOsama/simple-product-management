@@ -1,9 +1,16 @@
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
+import { createSellProductFormSchema, SellProductFormInput } from "@/lib/validations/selling";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { FormErrorMessage } from "./FormErrorMessage";
+import { useState } from "react";
 
 const placeholderImage =
     "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23e5e7eb'/%3E%3Cpath d='M120 250l48-52 38 38 28-30 46 44' fill='none' stroke='%239ca3af' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='160' cy='155' r='18' fill='%239ca3af'/%3E%3C/svg%3E";
@@ -12,10 +19,33 @@ type Product = {
     uuid: string,
     name: string,
     stock: number,
-    thumbnail: string
+    thumbnail: string,
+    sellingPrice: number
 };
     
 export function ProductCard(data: Product) {
+    const [isLoading, setIsLoading] = useState(false)
+    const schema = createSellProductFormSchema(data.stock)
+    
+    const form = useForm<SellProductFormInput>({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            name: "",
+            quantity: 1,
+            selling_price: data.sellingPrice
+        }
+    })
+    
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = form
+
+    const onSubmit = (formData: SellProductFormInput) => {
+        console.log(formData)
+    }
+    
     return (
         <>
         <Dialog>
@@ -23,13 +53,6 @@ export function ProductCard(data: Product) {
                 {/*  */}
                 <div className="bg-white p-2 rounded-lg shadow-sm cursor-pointer">
                     {/* image */}
-                    {/* <Image
-                        src={placeholderImage}
-                        width={400}
-                        height={400}
-                        alt="placeholder"
-                    /> */}
-
                     <div style={{ position: 'relative', width: '100%', height: '200px' }}>
                         <Image
                             src={data.thumbnail ? data.thumbnail : placeholderImage}
@@ -58,17 +81,97 @@ export function ProductCard(data: Product) {
                 {/*  */}
             </DialogTrigger>
             <DialogContent className="max-h-screen p-3">
-                <DialogHeader>
-                    <DialogTitle>Tambah Penjualan Produk</DialogTitle>
-                </DialogHeader>
-                <div className="py-2 space-y-2">
-                    <Input placeholder="jumlah" type="number" required/>
-                </div>
-                <DialogFooter>
-                    <button className="w-full h-full bg-orange-500 py-3 rounded-md text-white">
-                        Tambah Penjualan
-                    </button>
-                </DialogFooter>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <DialogHeader>
+                        <DialogTitle>Tambah Penjualan Produk</DialogTitle>
+                        <DialogDescription>Nama Produk: {data.name}</DialogDescription>
+                    </DialogHeader>
+                    {
+                        data.stock <= 0 ? 
+                        (
+                            <div className="text-center my-5">
+                                Stok Produk Ini Habis. Segera perbarui stok di menu detail produk atau klik tombol dibawah
+                            </div>
+                        ) :
+                        (
+                            <div className="py-2 space-y-2">
+                                <Field>
+                                    <FieldLabel className="text-gray-600" htmlFor="input-customer-name">Nama</FieldLabel>
+                                    <InputGroup className="h-10">
+                                        <InputGroupInput
+                                            placeholder="ex: mamang"
+                                            id="input-customer-name"
+                                            type="text"
+                                            required
+                                            {...register("name")}
+                                        />
+                                        {errors.name && (
+                                            <FormErrorMessage message={errors.name.message as string} />
+                                        )}
+                                    </InputGroup>
+                                </Field>
+                                <Field>
+                                    <FieldLabel className="text-gray-600" htmlFor="input-quantity">Jumlah</FieldLabel>
+                                    <InputGroup className="h-10">
+                                        <InputGroupInput
+                                            placeholder="ex: 5000"
+                                            id="input-quantity"
+                                            type="number"
+                                            max={data.stock}
+                                            min={1}
+                                            required
+                                            {...register("quantity")}
+                                        />
+                                        {errors.quantity && (
+                                            <FormErrorMessage message={errors.quantity.message as string} />
+                                        )}
+                                    </InputGroup>
+                                </Field>
+                                <Field>
+                                    <FieldLabel className="text-gray-600" htmlFor="input-selling-price">Harga Jual</FieldLabel>
+                                    <InputGroup className="h-10">
+                                        <InputGroupAddon>
+                                            <InputGroupText>Rp</InputGroupText>
+                                        </InputGroupAddon>
+                                        <InputGroupInput
+                                            placeholder="ex: 5000"
+                                            id="input-selling-price"
+                                            type="number"
+                                            min={0}
+                                            step="any"
+                                            defaultValue={data.sellingPrice}
+                                            {...register("selling_price")}
+                                        />
+                                        {errors.selling_price && (
+                                            <FormErrorMessage message={errors.selling_price.message as string} />
+                                        )}
+                                    </InputGroup>
+                                </Field>
+                            </div>
+                        )
+                    }
+                    <DialogFooter>
+                        {
+                            data.stock <= 0 ? 
+                            (
+                                <Link 
+                                    href={`produk/${data.uuid}`} 
+                                    className="w-full text-center h-full bg-orange-500 py-3 rounded-md text-white">
+                                    Perbarui Stok
+                                </Link>
+                            )
+                            :
+                            (
+                                <button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="w-full h-full bg-orange-500 py-3 rounded-md text-white">
+                                    Tambah Penjualan
+                                </button>
+                            )
+                        }
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
         </>

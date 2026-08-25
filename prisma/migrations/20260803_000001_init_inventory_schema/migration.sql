@@ -72,7 +72,6 @@ CREATE TABLE "restock_product" (
     "id" SERIAL NOT NULL,
     "product_id" INTEGER NOT NULL,
     "restock_quantity" DOUBLE PRECISION NOT NULL,
-    "remaining_stock" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "purchase_price" NUMERIC(18,2) NOT NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -83,6 +82,7 @@ CREATE TABLE "restock_product" (
 CREATE TABLE "sell_product" (
     "id" SERIAL NOT NULL,
     "user_id" INTEGER NOT NULL,
+    "customer_name" INTEGER NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -132,29 +132,6 @@ ALTER TABLE "overall_finances"
 
 ALTER TABLE "product_finances"
     ADD CONSTRAINT "product_finances_product_id_date_key" UNIQUE ("product_id", "date");
-
--- Functions
-CREATE OR REPLACE FUNCTION public.handle_restock_product_before_insert()
-RETURNS TRIGGER
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    v_current_stock DOUBLE PRECISION;
-BEGIN
-    SELECT COALESCE(p."total_remaining_stock", 0)
-    INTO v_current_stock
-    FROM "product" p
-    WHERE p."id" = NEW."product_id"
-    FOR UPDATE;
-
-    IF NOT FOUND THEN
-        RAISE EXCEPTION 'product_id % does not exist', NEW."product_id";
-    END IF;
-
-    NEW."remaining_stock" := v_current_stock + NEW."restock_quantity";
-    RETURN NEW;
-END;
-$$;
 
 CREATE OR REPLACE FUNCTION public.handle_restock_product_after_insert()
 RETURNS TRIGGER
@@ -322,12 +299,6 @@ END;
 $$;
 
 -- Triggers
-DROP TRIGGER IF EXISTS "trg_restock_product_before_insert" ON "restock_product";
-CREATE TRIGGER "trg_restock_product_before_insert"
-BEFORE INSERT ON "restock_product"
-FOR EACH ROW
-EXECUTE FUNCTION public.handle_restock_product_before_insert();
-
 DROP TRIGGER IF EXISTS "trg_restock_product_after_insert" ON "restock_product";
 CREATE TRIGGER "trg_restock_product_after_insert"
 AFTER INSERT ON "restock_product"

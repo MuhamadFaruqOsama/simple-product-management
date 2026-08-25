@@ -46,8 +46,7 @@ export async function POST(
                 restockProducts: {
                     create: {
                         quantity,
-                        purchasePrice: purchase_price,
-                        remainingStock: quantity
+                        purchasePrice: purchase_price
                     }
                 },
             },

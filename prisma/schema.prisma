@@ -89,7 +89,6 @@ model RestockProduct {
   id            Int      @id @default(autoincrement())
   productId     Int      @map("product_id")
   quantity      Float    @map("restock_quantity")
-  remainingStock Float   @default(0) @map("remaining_stock")
   purchasePrice Decimal  @map("purchase_price") @db.Decimal(18, 2)
   createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
@@ -101,6 +100,7 @@ model RestockProduct {
 model SellProduct {
   id        Int      @id @default(autoincrement())
   userId    Int      @map("user_id")
+  customer_name    String 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
 

@@ -34,7 +34,6 @@ type RestockProductDetail = {
     id: number;
     productId: number;
     quantity: number;
-    remainingStock: number;
     purchasePrice: string | number;
     createdAt: string;
 };
@@ -465,7 +464,6 @@ export default function PengadaanDetailPage() {
                             <TableRow>
                                 <TableHead className="font-semibold">Tanggal</TableHead>
                                 <TableHead className="font-semibold">Jumlah stok</TableHead>
-                                <TableHead className="font-semibold">Stok sisa</TableHead>
                                 <TableHead className="font-semibold">Harga satuan</TableHead>
                                 <TableHead className="font-semibold">Total</TableHead>
                             </TableRow>
@@ -478,9 +476,6 @@ export default function PengadaanDetailPage() {
                                     </TableCell>
                                     <TableCell className="align-top">
                                         {Number(item.quantity).toLocaleString('id-ID')}
-                                    </TableCell>
-                                    <TableCell className="align-top">
-                                        {Number(item.remainingStock).toLocaleString('id-ID')}
                                     </TableCell>
                                     <TableCell className="align-top">
                                         {Number(item.purchasePrice).toLocaleString('id-ID', {
