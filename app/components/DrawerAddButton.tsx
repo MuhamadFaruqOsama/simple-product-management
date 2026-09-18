@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from "react";
-import { Add01Icon, MinusSignIcon } from "@hugeicons/core-free-icons";
+import { Add01Icon, Cancel01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Dialog,
@@ -15,18 +15,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
 import { toast } from "sonner";
+import { createSellProductFormSchema, SellProductFormInput } from "@/lib/validations/selling";
 
 type LineItem = {
     id: string;
     product: string;
     quantity: string;
+    sellingPrice: string;
 };
 
 type Product = {
     uuid: string;
     name: string;
     totalStock: number;
-    sellingPrice: number;
+    sellingPrice: string | number;
 };
 
 export function DrawerAddButton() {
@@ -36,7 +38,7 @@ export function DrawerAddButton() {
     const [customerName, setCustomerName] = useState("")
     const [products, setProducts] = useState<Product[]>([])
     const [lineItems, setLineItems] = useState<LineItem[]>([
-        { id: "1", product: "", quantity: "1" },
+        { id: "1", product: "", quantity: "1", sellingPrice: "0" },
     ]);
 
     const items = useMemo(() => {
@@ -74,12 +76,15 @@ export function DrawerAddButton() {
                 id: crypto.randomUUID(),
                 product: "",
                 quantity: "1",
+                sellingPrice: "0",
             },
         ]);
     };
 
-    const removeLineItem = () => {
-        setLineItems((current) => (current.length > 1 ? current.slice(0, -1) : current));
+    const removeLineItem = (id: string) => {
+        setLineItems((current) =>
+            current.length > 1 ? current.filter((item) => item.id !== id) : current
+        );
     };
 
     const updateLineItem = (id: string, field: keyof Omit<LineItem, "id">, value: string) => {
@@ -90,34 +95,56 @@ export function DrawerAddButton() {
         );
     };
 
+    const updateProductLineItem = (id: string, productUuid: string) => {
+        const product = products.find((product) => product.uuid === productUuid)
+
+        setLineItems((current) =>
+            current.map((item) =>
+                item.id === id ? {
+                    ...item,
+                    product: productUuid,
+                    sellingPrice: String(product?.sellingPrice ?? 0)
+                } : item
+            )
+        );
+    };
+
     const resetForm = () => {
         setCustomerName("")
-        setLineItems([{ id: "1", product: "", quantity: "1" }])
+        setLineItems([{ id: "1", product: "", quantity: "1", sellingPrice: "0" }])
     }
 
     const onSubmit = async () => {
         try {
             setIsSubmitting(true)
 
-            const data = lineItems.map((lineItem) => {
-                const product = products.find((product) => product.uuid === lineItem.product)
-
-                return {
+            const body: SellProductFormInput = {
+                name: customerName,
+                data: lineItems.map((lineItem) => ({
                     uuid: lineItem.product,
                     quantity: Number(lineItem.quantity),
-                    selling_price: Number(product?.sellingPrice || 0)
-                }
-            })
+                    selling_price: Number(lineItem.sellingPrice)
+                }))
+            }
+
+            const validation = createSellProductFormSchema(
+                products.map((product) => ({
+                    uuid: product.uuid,
+                    stock: product.totalStock
+                }))
+            ).safeParse(body)
+
+            if (!validation.success) {
+                toast.error(validation.error.issues.map((issue) => issue.message).join(", "))
+                return
+            }
 
             const response = await fetch("/api/sell", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    name: customerName,
-                    data
-                })
+                body: JSON.stringify(validation.data)
             })
 
             const result = await response.json()
@@ -140,7 +167,7 @@ export function DrawerAddButton() {
     const handleDialogOpenChange = (open: boolean) => {
         setIsDialogOpen(open)
 
-        if (open && products.length === 0) {
+        if (open) {
             void getProduct()
         }
     }
@@ -166,43 +193,67 @@ export function DrawerAddButton() {
                 />
                 <div className="py-2 space-y-2 max-h-[70vh] overflow-y-auto">
                     {lineItems.map((lineItem, index) => (
-                        <div key={index} className="border p-1.5 border-gray-200 rounded">
+                        <div key={index} className="border p-1.5 border-gray-200 bg-gray-100 rounded-lg">
+                            <div className="flex justify-between items-center mb-1">
+                                <div className="text-xs">{index+1}.</div>
+                                {lineItems.length > 1 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => removeLineItem(lineItem.id)}
+                                    >
+                                        <HugeiconsIcon size={15} strokeWidth={2} icon={Cancel01Icon} />
+                                    </button>
+                                )}
+                            </div>
                             <div className="grid grid-cols-3 gap-2">
                                 <div className="col-span-2">
                                     <Combobox
                                         items={items}
                                         value={lineItem.product}
-                                        onValueChange={(value) => updateLineItem(lineItem.id, "product", value)}
+                                        onValueChange={(value) => updateProductLineItem(lineItem.id, value)}
                                         placeholder={isLoading ? "Memuat barang..." : "Pilih barang"}
                                         searchPlaceholder="Cari barang..."
                                         emptyText="Barang tidak ditemukan"
+                                        className="bg-white"
                                     />
                                 </div>
-                                <Input
-                                    className="w-full"
-                                    placeholder="Jumlah"
-                                    type="number"
-                                    min={1}
-                                    value={lineItem.quantity}
-                                    onChange={(event) => updateLineItem(lineItem.id, "quantity", event.target.value)}
-                                    required
-                                />
+                                <div className="col-span-1">
+                                    <Input
+                                        className="w-full bg-white"
+                                        placeholder="Jumlah"
+                                        type="number"
+                                        min={1}
+                                        value={lineItem.quantity}
+                                        onChange={(event) => updateLineItem(lineItem.id, "quantity", event.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="col-span-3">
+                                    <Input
+                                        className="w-full bg-white w-full"
+                                        placeholder="Harga"
+                                        type="number"
+                                        min={0}
+                                        step="any"
+                                        value={lineItem.sellingPrice}
+                                        onChange={(event) => updateLineItem(lineItem.id, "sellingPrice", event.target.value)}
+                                        required
+                                    />
+                                </div>
                             </div>
                         </div>
                     ))}
 
                     {/* button */}
                     <div className="flex justify-end gap-2 mt-2">
-                        <button onClick={removeLineItem} className="p-1 rounded border border-gray-300">
-                            <HugeiconsIcon icon={MinusSignIcon} size={20} strokeWidth={2.5}/>
-                        </button>
-                        <button onClick={addLineItem} className="p-1 rounded bg-blue-500 text-white">
+                        <button type="button" onClick={addLineItem} className="p-1 rounded bg-blue-500 text-white">
                             <HugeiconsIcon icon={Add01Icon} size={20} strokeWidth={2.5}/>
                         </button>
                     </div>
                 </div>
                 <DialogFooter>
                     <button
+                        type="button"
                         className="w-full h-full bg-orange-500 py-3 rounded-md text-white disabled:opacity-60"
                         disabled={isSubmitting || isLoading}
                         onClick={onSubmit}
