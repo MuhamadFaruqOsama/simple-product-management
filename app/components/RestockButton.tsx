@@ -16,7 +16,13 @@ import { useParams } from "next/navigation";
 
 type RestockButtonProps = {
     purchasePrice: number;
-    onRestocked?: (product: any) => void
+    onRestocked?: (product: {
+        uuid: string
+        name: string
+        thumbnail: string
+        totalStock: number
+        sellingPrice: number
+    }) => void
 }
 
 export function RestockButton({

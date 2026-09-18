@@ -11,13 +11,21 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+type Product = {
+  uuid: string
+  name: string
+  thumbnail: string
+  totalStock: number
+  sellingPrice: number
+}
+
 export default function PengadaanPage() {
   const [search, setSearch] = useState("")
-  const [products, setProducts] = useState<any[]>([])
+  const [products, setProducts] = useState<Product[]>([])
   const [isDescOrder, setIsDescOrder] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  const handleProductAdded = (product: any) => {
+  const handleProductAdded = (product: Product) => {
     setProducts((prev) => [product, ...prev])
   }
   
@@ -29,7 +37,7 @@ export default function PengadaanPage() {
         toast.error("Tidak dapat mengambil data produk")
         return 
       }
-      setProducts(result.data)
+      setProducts(result.data as Product[])
     } catch (error) {
       console.error(error)
       toast.error("Tidak dapat mengambil data produk. Coba lagi nanti")
@@ -50,7 +58,11 @@ export default function PengadaanPage() {
   })
 
   useEffect(() => {
-    getProduct()
+    const timer = window.setTimeout(() => {
+      void getProduct()
+    }, 0)
+
+    return () => window.clearTimeout(timer)
   }, [])
   
   return (

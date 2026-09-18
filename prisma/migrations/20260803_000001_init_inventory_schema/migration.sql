@@ -72,6 +72,7 @@ CREATE TABLE "restock_product" (
     "id" SERIAL NOT NULL,
     "product_id" INTEGER NOT NULL,
     "restock_quantity" DOUBLE PRECISION NOT NULL,
+    "remaining_stock" DOUBLE PRECISION NOT NULL,
     "purchase_price" NUMERIC(18,2) NOT NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -82,7 +83,7 @@ CREATE TABLE "restock_product" (
 CREATE TABLE "sell_product" (
     "id" SERIAL NOT NULL,
     "user_id" INTEGER NOT NULL,
-    "customer_name" INTEGER NULL,
+    "customer_name" TEXT NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

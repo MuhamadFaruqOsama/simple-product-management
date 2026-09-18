@@ -195,6 +195,7 @@ export async function POST(req: NextRequest) {
                     data: {
                         productId: addProduct.id,
                         quantity: quantity,
+                        remainingStock: quantity,
                         purchasePrice: purchase_price
                     }
                 })

@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from 'react'
 import { FilePond, registerPlugin } from 'react-filepond'
 import type { FilePondFile } from 'filepond'
 import 'filepond/dist/filepond.min.css'

@@ -31,7 +31,6 @@ export async function POST(
         }
         
         const { uuid } = await params
-        const userId = auth.payload?.id
 
         const {
             quantity,
@@ -46,9 +45,10 @@ export async function POST(
                 restockProducts: {
                     create: {
                         quantity,
+                        remainingStock: quantity,
                         purchasePrice: purchase_price
                     }
-                },
+                }
             },
             include: {
                 restockProducts: true

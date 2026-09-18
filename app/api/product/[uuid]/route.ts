@@ -33,12 +33,12 @@ export async function GET(
                 productFinances: true,
                 restockProducts: {
                     orderBy: {
-                        createdAt: "desc"
+                        id: "desc"
                     }
                 },
                 listSellProducts: {
                     orderBy: {
-                        createdAt: "desc"
+                        id: "desc"
                     }
                 }
             }

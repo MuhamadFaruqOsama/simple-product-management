@@ -34,6 +34,7 @@ type RestockProductDetail = {
     id: number;
     productId: number;
     quantity: number;
+    remainingStock: number;
     purchasePrice: string | number;
     createdAt: string;
 };
@@ -57,7 +58,7 @@ type ProductDetail = {
     sellingPrice: string | number;
     description: string;
     thumbnail: string;
-    productFinances: ProductFinanceDetail[];
+    productFinances: ProductFinanceDetail | null;
     restockProducts: RestockProductDetail[];
     listSellProducts: ListSellProducts[];
 };
@@ -82,11 +83,12 @@ export default function PengadaanDetailPage() {
     const params = useParams<{ uuid: string }>()
 
     // finances
-    const firstFinance = detailProduct?.productFinances?.[0]
-    const totalIncome = Number(firstFinance?.totalIncome ?? 0)
-    const totalSpending = Number(firstFinance?.totalSpending ?? 0)
+    const totalIncome = Number(detailProduct?.productFinances?.totalIncome ?? 0)
+    const totalSpending = Number(detailProduct?.productFinances?.totalSpending ?? 0)
     const totalProfit = Math.max(totalIncome - totalSpending, 0)
-    const totalProfitPercentage = Math.max(Math.floor((totalProfit / totalSpending) * 100), 0) 
+    const totalProfitPercentage = isNaN(totalSpending) || totalSpending === 0
+        ? 0
+        : Math.max(Math.floor((totalProfit / totalSpending) * 100), 0);
 
     // selling
     const selling = detailProduct?.listSellProducts
@@ -151,7 +153,7 @@ export default function PengadaanDetailPage() {
                         <>
                             <RestockButton 
                                 onRestocked={handleProductRestocked} 
-                                purchasePrice={Number(restock?.[0].purchasePrice)}
+                                purchasePrice={restock?.[0]?.purchasePrice ? Number(restock?.[0].purchasePrice) : 0}
                             />
                             
                             {/* edit */}
@@ -223,7 +225,7 @@ export default function PengadaanDetailPage() {
                         </TableRow>
                         <TableRow>
                             <TableCell className="w-1/3 p-3 align-top font-medium whitespace-normal wrap-break-word">
-                                Harga Jual
+                                Harga Jual (default)
                             </TableCell>
                             <TableCell className="w-2/3 p-3 align-top text-right whitespace-normal wrap-break-word">
                                 {isLoading ? 
@@ -463,7 +465,8 @@ export default function PengadaanDetailPage() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="font-semibold">Tanggal</TableHead>
-                                <TableHead className="font-semibold">Jumlah stok</TableHead>
+                                <TableHead className="font-semibold">Jumlah restok</TableHead>
+                                <TableHead className="font-semibold">Sisa Stok</TableHead>
                                 <TableHead className="font-semibold">Harga satuan</TableHead>
                                 <TableHead className="font-semibold">Total</TableHead>
                             </TableRow>
@@ -476,6 +479,9 @@ export default function PengadaanDetailPage() {
                                     </TableCell>
                                     <TableCell className="align-top">
                                         {Number(item.quantity).toLocaleString('id-ID')}
+                                    </TableCell>
+                                    <TableCell className="align-top">
+                                        {Number(item.remainingStock).toLocaleString('id-ID')}
                                     </TableCell>
                                     <TableCell className="align-top">
                                         {Number(item.purchasePrice).toLocaleString('id-ID', {

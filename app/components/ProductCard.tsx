@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { createSellProductFormSchema, SellProductFormInput } from "@/lib/validations/selling";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +10,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { FormErrorMessage } from "./FormErrorMessage";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const placeholderImage =
     "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23e5e7eb'/%3E%3Cpath d='M120 250l48-52 38 38 28-30 46 44' fill='none' stroke='%239ca3af' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='160' cy='155' r='18' fill='%239ca3af'/%3E%3C/svg%3E";
@@ -25,14 +25,20 @@ type Product = {
     
 export function ProductCard(data: Product) {
     const [isLoading, setIsLoading] = useState(false)
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
     const schema = createSellProductFormSchema(data.stock)
     
     const form = useForm<SellProductFormInput>({
         resolver: zodResolver(schema),
         defaultValues: {
             name: "",
-            quantity: 1,
-            selling_price: data.sellingPrice
+            data: [
+                {
+                    uuid: data.uuid,
+                    quantity: 1,
+                    selling_price: data.sellingPrice
+                }
+            ]
         }
     })
     
@@ -42,13 +48,48 @@ export function ProductCard(data: Product) {
         formState: { errors }
     } = form
 
-    const onSubmit = (formData: SellProductFormInput) => {
-        console.log(formData)
+    const quantityError = errors.data?.[0]?.quantity
+    const sellingPriceError = errors.data?.[0]?.selling_price
+
+    const onSubmit = async (data: SellProductFormInput) => {
+        try {
+            setIsLoading(true)
+
+            const addUUID = {
+                ...data,
+                
+            }
+            const stringData = JSON.stringify(data)
+
+            const response = await fetch("/api/sell", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: stringData
+            })
+
+            const result = await response.json()
+            if(!result.status) {
+                toast.error(result.message)
+                return
+            }
+
+            toast.success(result.message)
+            setIsDialogOpen(false)
+            return
+            
+        } catch (error) {
+            console.error(error)
+            toast.error("Terjadi masalah pada sisi server. Coba lagi nanti")
+        } finally {
+            setIsLoading(false)
+        }
     }
     
     return (
         <>
-        <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger>
                 {/*  */}
                 <div className="bg-white p-2 rounded-lg shadow-sm cursor-pointer">
@@ -86,6 +127,7 @@ export function ProductCard(data: Product) {
                         <DialogTitle>Tambah Penjualan Produk</DialogTitle>
                         <DialogDescription>Nama Produk: {data.name}</DialogDescription>
                     </DialogHeader>
+                    <input type="hidden" {...register("data.0.uuid")} />
                     {
                         data.stock <= 0 ? 
                         (
@@ -102,7 +144,6 @@ export function ProductCard(data: Product) {
                                             placeholder="ex: mamang"
                                             id="input-customer-name"
                                             type="text"
-                                            required
                                             {...register("name")}
                                         />
                                         {errors.name && (
@@ -115,15 +156,15 @@ export function ProductCard(data: Product) {
                                     <InputGroup className="h-10">
                                         <InputGroupInput
                                             placeholder="ex: 5000"
-                                            id="input-quantity"
+                                            id="input-quantity-0"
                                             type="number"
                                             max={data.stock}
                                             min={1}
                                             required
-                                            {...register("quantity")}
+                                            {...register("data.0.quantity")}
                                         />
-                                        {errors.quantity && (
-                                            <FormErrorMessage message={errors.quantity.message as string} />
+                                        {quantityError && (
+                                            <FormErrorMessage message={quantityError.message as string} />
                                         )}
                                     </InputGroup>
                                 </Field>
@@ -135,15 +176,15 @@ export function ProductCard(data: Product) {
                                         </InputGroupAddon>
                                         <InputGroupInput
                                             placeholder="ex: 5000"
-                                            id="input-selling-price"
+                                            id="input-selling-price-0"
                                             type="number"
                                             min={0}
                                             step="any"
                                             defaultValue={data.sellingPrice}
-                                            {...register("selling_price")}
+                                            {...register("data.0.selling_price")}
                                         />
-                                        {errors.selling_price && (
-                                            <FormErrorMessage message={errors.selling_price.message as string} />
+                                        {sellingPriceError && (
+                                            <FormErrorMessage message={sellingPriceError.message as string} />
                                         )}
                                     </InputGroup>
                                 </Field>

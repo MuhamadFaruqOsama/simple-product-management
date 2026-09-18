@@ -14,7 +14,13 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 type AddProductProps = {
-    onProductAdded: (product: any) => void
+    onProductAdded: (product: {
+        uuid: string
+        name: string
+        thumbnail: string
+        totalStock: number
+        sellingPrice: number
+    }) => void
 }
 
 export function AddProduct(
@@ -211,7 +217,7 @@ export function AddProduct(
                             <Controller
                                 name="thumbnail"
                                 control={control}
-                                render={({field, fieldState}) => (
+                                render={({field}) => (
                                     <>
                                         <ProductImageUploader
                                             value={field.value ?? null}

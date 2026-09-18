@@ -50,7 +50,7 @@ model WithdrawBalanceHistory {
 
 model ProductFinance {
   id            Int      @id @default(autoincrement())
-  productId     Int      @map("product_id")
+  productId     Int      @unique @map("product_id")
   totalIncome   Decimal  @default(0) @map("total_income") @db.Decimal(18, 2)
   totalSpending Decimal  @default(0) @map("total_spending") @db.Decimal(18, 2)
   date          DateTime @db.Date
@@ -58,7 +58,6 @@ model ProductFinance {
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@unique([productId, date])
   @@map("product_finances")
 }
 
@@ -78,7 +77,7 @@ model Product {
   updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
 
   user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  productFinances  ProductFinance[]
+  productFinances  ProductFinance?
   restockProducts  RestockProduct[]
   listSellProducts ListSellProduct[]
 
@@ -89,6 +88,7 @@ model RestockProduct {
   id            Int      @id @default(autoincrement())
   productId     Int      @map("product_id")
   quantity      Float    @map("restock_quantity")
+  remainingStock Float    @map("remaining_stock")
   purchasePrice Decimal  @map("purchase_price") @db.Decimal(18, 2)
   createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 

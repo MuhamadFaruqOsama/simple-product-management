@@ -192,7 +192,7 @@ export function EditProduct({ item, onUpdated }: EditProductProps) {
                             <Controller
                                 name="thumbnail"
                                 control={control}
-                                render={({field, fieldState}) => (
+                                render={({field}) => (
                                     <>
                                         <ProductImageUploader
                                             value={field.value ?? null}
