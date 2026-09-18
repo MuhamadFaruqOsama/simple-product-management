@@ -98,6 +98,7 @@ export function ProductCard(data: Product) {
                         <Image
                             src={data.thumbnail ? data.thumbnail : placeholderImage}
                             alt="placeholder"
+                            className="rounded-lg"
                             fill
                             style={{ objectFit: 'cover' }} // Agar gambar tidak terdistorsi/gepeng
                         />

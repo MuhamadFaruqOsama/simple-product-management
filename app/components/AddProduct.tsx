@@ -111,7 +111,7 @@ export function AddProduct(
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="py-2 space-y-2 max-h-[70vh] overflow-y-auto">
+                    <div className="py-2 space-y-2 max-h-[50vh] overflow-y-auto">
                         <Field>
                             <FieldLabel className="text-gray-600" htmlFor="input-add-product-name">Nama Produk</FieldLabel>
                             <Input 

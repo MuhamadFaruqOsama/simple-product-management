@@ -191,7 +191,7 @@ export function DrawerAddButton() {
                     value={customerName}
                     onChange={(event) => setCustomerName(event.target.value)}
                 />
-                <div className="py-2 space-y-2 max-h-[70vh] overflow-y-auto">
+                <div className="py-2 space-y-2 max-h-[50vh] overflow-y-auto">
                     {lineItems.map((lineItem, index) => (
                         <div key={index} className="border p-1.5 border-gray-200 bg-gray-100 rounded-lg">
                             <div className="flex justify-between items-center mb-1">
@@ -230,7 +230,7 @@ export function DrawerAddButton() {
                                 </div>
                                 <div className="col-span-3">
                                     <Input
-                                        className="w-full bg-white w-full"
+                                        className="w-full bg-white"
                                         placeholder="Harga"
                                         type="number"
                                         min={0}
