@@ -9,7 +9,7 @@ Asimple application for managing products, inventory, restocking, and sales.
 
 ---
 
-## 📋 About
+## About
 
 **Taksara** is an application designed to simplify product and inventory management.
 
@@ -28,7 +28,7 @@ The application allows users to manage products, record restocking transactions,
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### 1. Clone the Repository
 
@@ -104,7 +104,7 @@ http://localhost:3000
 
 ---
 
-## 📌 Notes
+## Notes
 
 Before running the application, make sure:
 
@@ -118,7 +118,7 @@ Before running the application, make sure:
 
 ---
 
-## 📄 License
+## License
 
 This project is intended for personal and development purposes.
 
