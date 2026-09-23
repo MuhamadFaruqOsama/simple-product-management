@@ -10,18 +10,12 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 
-const chartData = [
-  { product: "APD", stok: 18 },
-  { product: "Kaos Tangan", stok: 12 },
-  { product: "Masker", stok: 7 },
-  { product: "Sarung Tangan", stok: 4 },
-  { product: "Hand Sanitizer", stok: 9 },
-  { product: "Sepatu Safety", stok: 6 },
-  { product: "Rompi", stok: 15 },
-  { product: "Helm", stok: 11 },
-  { product: "Kacamata", stok: 8 },
-  { product: "Ear Plug", stok: 5 },
-]
+type StockAnalysisChartProps = {
+  data: {
+    product: string;
+    stok: number;
+  }[];
+}
 
 const chartConfig = {
   stok: {
@@ -30,16 +24,17 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function StockAnalysisChart() {
+export function StockAnalysisChart({ data }: StockAnalysisChartProps) {
   return (
     <Card>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={data}
             margin={{
               top: 20,
+              bottom: 55,
             }}
           >
             <CartesianGrid vertical={false} />
@@ -48,6 +43,10 @@ export function StockAnalysisChart() {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
+              angle={-35}
+              textAnchor="end"
+              height={80}
+              interval={0}
             />
             <ChartTooltip
               cursor={false}

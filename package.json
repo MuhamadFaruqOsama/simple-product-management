@@ -19,6 +19,7 @@
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cn": "^0.3.0",
     "crypto": "^1.0.1",
     "filepond": "^4.32.12",
     "filepond-plugin-image-exif-orientation": "^1.0.11",

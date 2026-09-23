@@ -55,10 +55,11 @@ export function ProductCard(data: Product) {
         try {
             setIsLoading(true)
 
-            const addUUID = {
-                ...data,
+            // const addUUID = {
+            //     ...data,
                 
-            }
+            // }
+            
             const stringData = JSON.stringify(data)
 
             const response = await fetch("/api/sell", {

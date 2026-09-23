@@ -15,12 +15,13 @@ import {
 
 export const description = "A bar chart with a label"
 
-const chartData = [
-  { month: "March", pemasukkan: 237, pengeluaran: 140 },
-  { month: "April", pemasukkan: 73, pengeluaran: 90 },
-  { month: "May", pemasukkan: 209, pengeluaran: 160 },
-  { month: "June", pemasukkan: 214, pengeluaran: 130 },
-]
+type EarningChartProps = {
+  data: {
+    month: string;
+    pemasukkan: number;
+    pengeluaran: number;
+  }[];
+}
 
 const chartConfig = {
   pemasukkan: {
@@ -33,14 +34,14 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function EarningChart() {
+export function EarningChart({ data }: EarningChartProps) {
   return (
     <Card>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={data}
             margin={{
               top: 20,
             }}

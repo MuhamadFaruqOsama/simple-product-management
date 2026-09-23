@@ -89,17 +89,23 @@ async function restoreSellProductStock(
         },
         orderBy: [
             {
-                createdAt: "asc"
-            },
-            {
-                id: "asc"
+                id: "desc"
             }
         ]
     })
 
+    const totalRestorableStock = restockProducts.reduce(
+        (total, restockProduct) => total + (restockProduct.quantity - restockProduct.remainingStock),
+        0
+    )
+
+    if (totalRestorableStock < quantity) {
+        throw new Error("Kapasitas restock product tidak mencukupi")
+    }
+
     let remainingQuantity = quantity
 
-    for (const restockProduct of restockProducts) {
+    for (const restockProduct of restockProducts.reverse()) {
         if (remainingQuantity <= 0) {
             break
         }
@@ -194,39 +200,6 @@ async function reduceSellProductStock(
 
         remainingQuantity -= stockToUse
     }
-}
-
-async function decreaseSellFinance(
-    tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0],
-    userId: number,
-    productId: number,
-    date: Date,
-    amount: number
-) {
-    const financeDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
-
-    await tx.productFinance.updateMany({
-        where: {
-            productId
-        },
-        data: {
-            totalIncome: {
-                decrement: amount
-            }
-        }
-    })
-
-    await tx.overallFinance.updateMany({
-        where: {
-            userId,
-            date: financeDate
-        },
-        data: {
-            totalIncome: {
-                decrement: amount
-            }
-        }
-    })
 }
 
 export async function GET(req: NextRequest) {
@@ -536,13 +509,9 @@ export async function PUT(req: NextRequest) {
             )
 
             for (const item of sellProduct.listSellProducts) {
-                const amount = item.quantity * Number(item.sellingPrice)
-
                 if (returnToStock) {
                     await restoreSellProductStock(tx, item.productId, item.quantity)
                 }
-
-                await decreaseSellFinance(tx, userId, item.productId, sellProduct.createdAt, amount)
             }
 
             await tx.listSellProduct.deleteMany({
@@ -585,7 +554,8 @@ export async function PUT(req: NextRequest) {
                         sellProductId: sellProduct.id,
                         productId,
                         quantity,
-                        sellingPrice
+                        sellingPrice,
+                        createdAt: sellProduct.createdAt
                     }
                 })
 
@@ -675,13 +645,9 @@ export async function DELETE(req: NextRequest) {
                 }
 
                 for (const item of sellProduct.listSellProducts) {
-                    const amount = item.quantity * Number(item.sellingPrice)
-
                     if (returnToStock) {
                         await restoreSellProductStock(tx, item.productId, item.quantity)
                     }
-
-                    await decreaseSellFinance(tx, userId, item.productId, sellProduct.createdAt, amount)
                 }
 
                 await tx.sellProduct.delete({
@@ -718,35 +684,6 @@ export async function DELETE(req: NextRequest) {
                     }
                 })
             }
-
-            await tx.productFinance.updateMany({
-                where: {
-                    productId: restockProduct.productId
-                },
-                data: {
-                    totalSpending: {
-                        decrement: restockProduct.quantity * Number(restockProduct.purchasePrice)
-                    }
-                }
-            })
-
-            const financeDate = new Date(
-                restockProduct.createdAt.getFullYear(),
-                restockProduct.createdAt.getMonth(),
-                restockProduct.createdAt.getDate()
-            )
-
-            await tx.overallFinance.updateMany({
-                where: {
-                    userId,
-                    date: financeDate
-                },
-                data: {
-                    totalSpending: {
-                        decrement: restockProduct.quantity * Number(restockProduct.purchasePrice)
-                    }
-                }
-            })
 
             await tx.restockProduct.delete({
                 where: {

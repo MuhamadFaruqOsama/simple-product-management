@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import {    
     Table,
@@ -77,7 +77,7 @@ const formatIndonesianDate = (dateValue?: string) => {
 };
 
 export default function PengadaanDetailPage() {
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [viewMode, setViewMode] = useState<ViewMode>("penjualan");
     const [detailProduct, setDetailProduct] = useState<ProductDetail | null>(null)
     const params = useParams<{ uuid: string }>()
@@ -106,29 +106,29 @@ export default function PengadaanDetailPage() {
 
     const isActive = (mode: ViewMode) => viewMode === mode;
 
-    const handleProductRestocked = async () => {
-        await getDetailProduct()
-    }
-    
     const router = useRouter()
 
-    async function getDetailProduct() {
+    const fetchDetailProduct = useCallback(async () => {
+        const uuid = params.uuid
+        if (!uuid) return null
+
+        const response = await fetch(`/api/product/${uuid}`)
+        const result = await response.json()
+
+        if(!result.status) {
+            toast.error(result.message)
+            if(result.status_code === 404) router.push("/produk")
+            return null
+        }            
+        
+        return result.data as ProductDetail
+    }, [params.uuid, router])
+
+    const getDetailProduct = useCallback(async () => {
         try {
             setIsLoading(true)
-
-            const uuid = params.uuid
-            if (!uuid) return
-
-            const response = await fetch(`/api/product/${uuid}`)
-            const result = await response.json()
-
-            if(!result.status) {
-                toast.error(result.message)
-                if(result.status_code === 404) router.push("/produk")
-                return
-            }            
-            
-            setDetailProduct(result.data)
+            const product = await fetchDetailProduct()
+            if (product) setDetailProduct(product)
             
         } catch (error) {
             console.error(error)
@@ -137,11 +137,33 @@ export default function PengadaanDetailPage() {
         } finally {
             setIsLoading(false)
         }
+    }, [fetchDetailProduct])
+
+    const handleProductRestocked = async () => {
+        await getDetailProduct()
     }
 
     useEffect(()=> {
-        getDetailProduct()
-    }, [params.uuid])
+        let isCurrent = true
+
+        const loadDetailProduct = async () => {
+            try {
+                const product = await fetchDetailProduct()
+                if (isCurrent && product) setDetailProduct(product)
+            } catch (error) {
+                console.error(error)
+                toast.error("Terjadi masalah pada sisi client. Coba lagi nanti")
+            } finally {
+                if (isCurrent) setIsLoading(false)
+            }
+        }
+
+        loadDetailProduct()
+
+        return () => {
+            isCurrent = false
+        }
+    }, [fetchDetailProduct])
     
     return (
         <div className="w-full max-w-full">

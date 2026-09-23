@@ -1,6 +1,7 @@
 'use client'
 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
@@ -8,10 +9,11 @@ import { toast } from "sonner";
 
 type DeleteHistoryProps = {
     id: string;
+    isRestock: boolean;
     onDeleted: () => void;
 };
 
-export function DeleteHistory({ id, onDeleted }: DeleteHistoryProps) {
+export function DeleteHistory({ id, isRestock, onDeleted }: DeleteHistoryProps) {
     const [isLoading, setIsLoading] = useState(false)
     const [returnToStock, setReturnToStock] = useState(true)
 
@@ -55,16 +57,25 @@ export function DeleteHistory({ id, onDeleted }: DeleteHistoryProps) {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
                     <AlertDialogDescription>
+                        {
+                            isRestock ? 
+                            "Jika Anda menghapus riwayat pengadaan, maka produk akan memiliki stok seperti sebelumnya."
+                            :
+                            "Jika Anda mengembalikan stok produk, maka stok produk yang terjual akan dikembalikan ke stok produk yang tersedia."
+                        }
                         Menghapus riwayat transaksi akan berdampak ke data stok produk dan keuangan. Apakah Anda tetap ingin menghapusnya?
                     </AlertDialogDescription>
-                    <label className="flex items-center gap-2 text-sm text-gray-700 pt-2">
-                        <input
-                            type="checkbox"
-                            checked={returnToStock}
-                            onChange={(event) => setReturnToStock(event.target.checked)}
-                        />
-                        Kembalikan ke stok produk
-                    </label>
+                    {
+                        !isRestock && (
+                            <label className="flex items-center gap-2 text-sm text-gray-700 pt-2">
+                                <Checkbox
+                                    checked={returnToStock}
+                                    onCheckedChange={(checked) => setReturnToStock(checked === true)}
+                                />
+                                Kembalikan ke stok produk
+                            </label>
+                        )
+                    }
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel className="h-10 cursor-pointer bg-blue-500 text-white hover:bg-blue-500 hover:text-white">Cancel</AlertDialogCancel>

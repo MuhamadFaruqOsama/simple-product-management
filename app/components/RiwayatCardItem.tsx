@@ -62,7 +62,7 @@ export const RiwayatCardItem = forwardRef<HTMLDivElement, RiwayatCardItemProps>(
                                     onUpdated={onUpdated}
                                 />
                             )}
-                            <DeleteHistory id={item.id} onDeleted={onDeleted} />
+                            <DeleteHistory id={item.id} isRestock={item.is_restock} onDeleted={onDeleted} />
                             <PrintHistory item={item} />
                         </div>
 

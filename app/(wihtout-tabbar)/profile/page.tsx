@@ -1,8 +1,8 @@
 'use client'
 
-import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+// import { Field, FieldLabel } from "@/components/ui/field";
+// import { Input } from "@/components/ui/input";
+// import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChangePassword } from "./components/ChangePassword";
 
 export default function ProfilePage() {

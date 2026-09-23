@@ -10,18 +10,12 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 
-const chartData = [
-  { product: "APD", jumlah: 186 },
-  { product: "Kaos Tangan", jumlah: 305 },
-  { product: "Masker", jumlah: 237 },
-  { product: "Sarung Tangan", jumlah: 73 },
-  { product: "Hand Sanitizer", jumlah: 209 },
-  { product: "Sepatu Safety", jumlah: 165 },
-  { product: "Rompi", jumlah: 142 },
-  { product: "Helm", jumlah: 128 },
-  { product: "Kacamata", jumlah: 96 },
-  { product: "Ear Plug", jumlah: 84 },
-]
+type ProductAnalysisChartProps = {
+  data: {
+    product: string;
+    jumlah: number;
+  }[];
+}
 
 const chartConfig = {
   jumlah: {
@@ -30,16 +24,17 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function ProductAnalysisChart() {
+export function ProductAnalysisChart({ data }: ProductAnalysisChartProps) {
   return (
     <Card>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={data}
             margin={{
               top: 20,
+              bottom: 55,
             }}
           >
             <CartesianGrid vertical={false} />
@@ -48,6 +43,10 @@ export function ProductAnalysisChart() {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
+              angle={-35}
+              textAnchor="end"
+              height={80}
+              interval={0}
             />
             <ChartTooltip
               cursor={false}

@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/ui/combobox";
 import { toast } from "sonner";
 import { type RiwayatItem } from "./RiwayatCardItem";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type LineItem = {
     id: string;
@@ -151,17 +152,9 @@ export function EditHistory({ item, onUpdated }: EditHistoryProps) {
                     value={customerName}
                     onChange={(event) => setCustomerName(event.target.value)}
                 />
-                <label className="flex items-center gap-2 text-sm">
-                    <input
-                        type="checkbox"
-                        checked={returnToStock}
-                        onChange={(event) => setReturnToStock(event.target.checked)}
-                    />
-                    Kembalikan ke stok produk
-                </label>
-                <div className="py-2 space-y-2 max-h-[70vh] overflow-y-auto">
+                <div className="py-2 space-y-2 max-h-[50vh] overflow-y-auto">
                     {lineItems.map((lineItem, index) => (
-                        <div key={lineItem.id} className="border p-1.5 border-gray-200 rounded">
+                        <div key={lineItem.id} className="border p-1.5 border-gray-200 bg-gray-100 rounded-lg">
                             <div className="flex justify-between items-center mb-1">
                                 <div className="text-xs">{index + 1}.</div>
                                 {lineItems.length > 1 && (
@@ -178,6 +171,7 @@ export function EditHistory({ item, onUpdated }: EditHistoryProps) {
                                     <Combobox
                                         items={items}
                                         value={lineItem.product}
+                                        className="bg-white"
                                         onValueChange={(value) => updateProductLineItem(lineItem.id, value)}
                                         placeholder="Pilih barang"
                                         searchPlaceholder="Cari barang..."
@@ -185,7 +179,7 @@ export function EditHistory({ item, onUpdated }: EditHistoryProps) {
                                     />
                                 </div>
                                 <Input
-                                    className="w-full"
+                                    className="w-full bg-white"
                                     placeholder="Jumlah"
                                     type="number"
                                     min={1}
@@ -195,7 +189,7 @@ export function EditHistory({ item, onUpdated }: EditHistoryProps) {
                                 />
                                 <div className="col-span-3">
                                     <Input
-                                        className="w-full"
+                                        className="w-full bg-white"
                                         placeholder="Harga"
                                         type="number"
                                         min={0}
@@ -213,7 +207,14 @@ export function EditHistory({ item, onUpdated }: EditHistoryProps) {
                             <HugeiconsIcon icon={Add01Icon} size={20} strokeWidth={2.5}/>
                         </button>
                     </div>
-                </div>
+                </div>w
+                <label className="flex items-center gap-2 text-sm">
+                        <Checkbox
+                            checked={returnToStock}
+                            onCheckedChange={(checked) => setReturnToStock(checked === true)}
+                        />
+                        Kembalikan ke stok produk
+                    </label>
                 <DialogFooter>
                     <button
                         type="button"
